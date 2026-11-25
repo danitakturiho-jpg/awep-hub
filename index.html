@@ -2165,6 +2165,7 @@ async function ctAddToEvent(){
   ADD.sheets.forEach(s => s.use = s.header >= 0);
   buildCandidates();
   let n = 0; for (const c of ADD.cands) { c.pick = !c.dup && sel.has(c.sheet + "#" + c.row); if (c.pick) n++; }
+  ADD.cands.sort((a, b) => (b.pick ? 1 : 0) - (a.pick ? 1 : 0)); ADD.cands.forEach((c, i) => c.i = i);
   go("add"); toast(`${n} ticked. Check them, then click <b>Add ${n} to the event</b>.`, 6000);
 }
 
