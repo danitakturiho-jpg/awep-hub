@@ -6,183 +6,179 @@
 <title>AWEP Events Hub</title>
 <style>
 :root{
-  --plum:#8A3662; --plum-d:#6E2A4E; --aub:#53263D; --gold:#C1A166; --gold-l:#F4ECDC; --ink:#2B1F27; --muted:#7A6B74;
+  --plum:#8A3662; --plum-d:#6E2A4E; --aub:#53263D; --gold:#C1A166; --gold-l:#F6EFE1; --ink:#2B1F27; --muted:#7A6B74;
   --line:#EADFE5; --bg:#FAF7F9; --card:#fff; --soft:#F6EDF2;
   --red:#B3261E; --red-bg:#FDECEA; --amber:#8A5A00; --amber-bg:#FFF4DC; --green:#1E6B3A; --green-bg:#E6F4EA;
   --blue:#1D4F91; --blue-bg:#E8F0FB; --grey:#5d5d5d; --grey-bg:#EEEEEE;
 }
-*{box-sizing:border-box}
+*{box-sizing:border-box;min-width:0}
 html,body{height:100%}
-body{margin:0;font:14px/1.45 "Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg)}
-.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+body{margin:0;font:14.5px/1.5 "Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg)}
+.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
 aside{background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
-.brand{padding:18px 18px 10px;text-align:center;border-bottom:1px solid var(--line)}
-.brand img{width:128px;display:block;margin:0 auto 6px}
-.brand .name{font-weight:700;color:var(--aub);letter-spacing:.3px}
-.brand .sub{font-size:11px;color:var(--muted)}
-.evpill{margin:12px 14px 4px;background:var(--gold-l);border:1px solid #E6D6B4;border-radius:10px;padding:8px 10px;font-size:12px;color:#5A4520}
-.evpill b{display:block;font-size:12.5px;color:var(--aub)}
-nav{padding:8px 8px;overflow:auto;flex:1}
-nav a{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:13.5px;margin:1px 0}
+.brand{padding:16px 16px 12px;text-align:center;border-bottom:1px solid var(--line);cursor:pointer}
+.brand img{width:112px;display:block;margin:0 auto 4px}
+.brand .name{font-weight:700;color:var(--aub)}
+nav{padding:10px 10px;overflow:auto;flex:1}
+nav a{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:9px;color:var(--ink);text-decoration:none;font-size:14px;margin:1px 0;cursor:pointer}
 nav a:hover{background:var(--soft)}
 nav a.on{background:var(--plum);color:#fff}
 nav a .n{margin-left:auto;font-size:11px;background:var(--soft);color:var(--plum);border-radius:10px;padding:0 7px;font-weight:600}
-nav a.on .n{background:rgba(255,255,255,.22);color:#fff}
-nav .sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);padding:14px 12px 4px}
-nav a.soon{color:#9b8e96}
-nav a.soon .n{background:var(--gold-l);color:#8a6a2a}
-nav a.off{pointer-events:none;opacity:.45}
+nav a.on .n{background:rgba(255,255,255,.25);color:#fff}
+nav a .soon{margin-left:auto;font-size:10.5px;color:#9a7a3a;background:var(--gold-l);border-radius:10px;padding:0 7px}
+nav .sec{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);padding:16px 11px 5px}
+nav .ev{border:1px solid var(--line);border-radius:11px;margin:6px 0;overflow:hidden}
+nav .ev.cur{border-color:#D9BFCF;background:#FCF8FA}
+nav .ev .evh{display:block;padding:9px 11px;cursor:pointer;text-decoration:none;color:var(--ink)}
+nav .ev .evh b{display:block;font-size:13.5px;color:var(--aub);line-height:1.3}
+nav .ev .evh span{font-size:11.5px;color:var(--muted)}
+nav .ev .sub{padding:0 6px 6px}
+nav .ev .sub a{font-size:13.5px;padding:6px 10px}
+nav a.dim{color:#a2959c}
 .ico{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.foot{border-top:1px solid var(--line);padding:12px 14px;font-size:12px}
-.foot label{color:var(--muted);display:block;margin-bottom:3px}
-.foot input{width:100%}
-#saveState{margin-top:8px;display:flex;align-items:center;gap:6px;color:var(--muted);min-height:20px}
+.foot{border-top:1px solid var(--line);padding:11px 14px;font-size:12.5px}
+#me{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+#me b{color:var(--aub)}
+#me a{color:var(--plum);cursor:pointer;text-decoration:underline}
+#saveState{margin-top:7px;display:flex;align-items:center;gap:6px;color:var(--muted);min-height:20px}
 #saveState .dot{width:8px;height:8px;border-radius:50%;background:#bbb;flex:none}
 #saveState.ok .dot{background:#3a9a5b} #saveState.dirty .dot{background:#d99a00} #saveState.err .dot{background:var(--red)}
 #saveState.err{color:var(--red)}
-.foot .row{display:flex;gap:6px;margin-top:8px}
-.foot .row button{flex:1;padding:6px 8px;font-size:12px}
+#btnSave{margin-top:7px;width:100%}
 main{min-width:0}
-.top{display:flex;align-items:center;gap:12px;padding:18px 26px 6px}
-.top h1{font-size:22px;margin:0;color:var(--aub);font-weight:650}
+.top{display:flex;align-items:flex-start;gap:12px;padding:18px 28px 4px}
+.crumb{font-size:12.5px;color:var(--muted)}
+.crumb a{color:var(--plum);cursor:pointer}
+.top h1{font-size:24px;margin:2px 0 0;color:var(--aub);font-weight:650;line-height:1.2}
+.top .sub{color:var(--muted);font-size:14px;margin-top:3px;max-width:820px}
 .top .spacer{flex:1}
-.page{padding:8px 26px 30px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
-button{font:inherit;border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 13px;cursor:pointer;color:var(--ink)}
+.page{padding:12px 28px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+button{font:inherit;border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 14px;cursor:pointer;color:var(--ink)}
 button:hover:not(:disabled){border-color:var(--plum)}
 button.primary{background:var(--plum);border-color:var(--plum);color:#fff}
 button.primary:hover:not(:disabled){background:var(--plum-d)}
 button.gold{background:var(--gold);border-color:var(--gold);color:#2b1f10}
-button.ghost{background:transparent}
+button.ghost{background:transparent;border-color:transparent;color:var(--plum)}
+button.ghost:hover{text-decoration:underline}
+button.big{padding:11px 20px;font-size:15.5px;font-weight:600}
+button.small{font-size:12.5px;padding:5px 10px}
 button:disabled{opacity:.45;cursor:not-allowed}
-input[type=text],input[type=email],select,textarea{font:inherit;border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;color:var(--ink)}
+input[type=text],select,textarea{font:inherit;border:1px solid var(--line);border-radius:9px;padding:8px 10px;background:#fff;color:var(--ink)}
 textarea{width:100%;resize:vertical}
 input:focus,select:focus,textarea:focus{outline:2px solid #E7C9D9;border-color:var(--plum)}
-.muted{color:var(--muted)} .small{font-size:12px}
+.muted{color:var(--muted)} .small{font-size:12.5px}
 .hide{display:none!important}
-/* welcome */
-.welcome{max-width:760px;margin:40px auto;text-align:center}
-.welcome img{width:180px}
-.welcome h2{color:var(--aub);margin:10px 0 6px;font-size:26px}
-.drop{margin:22px auto 0;border:2px dashed #D9C3CF;border-radius:14px;padding:34px;background:#fff;cursor:pointer}
-.drop.over{background:var(--soft);border-color:var(--plum)}
-.drop h3{margin:0 0 6px;color:var(--plum)}
-/* home */
-.hero{display:flex;gap:18px;align-items:center;background:linear-gradient(120deg,var(--aub),var(--plum));color:#fff;border-radius:14px;padding:20px 22px;margin-bottom:16px}
-.hero h2{margin:0 0 4px;font-size:19px}
-.hero .meta{opacity:.9;font-size:13px}
+h3.h{margin:0 0 10px;font-size:16px;color:var(--aub)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.evcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:6px;min-height:150px}
+.evcard:hover{border-color:var(--plum);box-shadow:0 2px 10px rgba(83,38,61,.08)}
+.evcard b{font-size:15.5px;color:var(--aub);line-height:1.3}
+.evcard .meta{font-size:12.5px;color:var(--muted)}
+.evcard .stats{display:flex;gap:12px;margin-top:auto;font-size:12.5px}
+.evcard .stats span b{font-size:15px;display:block;color:var(--ink)}
+.evcard.new{border-style:dashed;align-items:center;justify-content:center;text-align:center;color:var(--plum)}
+.evcard.new .plus{font-size:30px;line-height:1}
+.howto{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}
+.howto div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13px}
+.howto b{display:block;color:var(--plum);margin-bottom:2px}
+.hero{background:linear-gradient(120deg,var(--aub),var(--plum));color:#fff;border-radius:16px;padding:20px 22px;margin-bottom:16px;display:flex;gap:16px;align-items:center}
+.hero h2{margin:0 0 4px;font-size:19px;line-height:1.3}
 .hero .gl{width:4px;align-self:stretch;background:var(--gold);border-radius:3px}
-.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:16px}
-.tile{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer}
-.tile:hover{border-color:var(--plum)}
-.tile b{font-size:24px;display:block;color:var(--aub)}
-.tile span{font-size:12.5px;color:var(--muted)}
-.tile.red b{color:var(--red)} .tile.amber b{color:var(--amber)} .tile.green b{color:var(--green)} .tile.blue b{color:var(--blue)}
-.two{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
-.next{list-style:none;margin:0;padding:0}
-.next li{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid #f2eaee}
-.next li:last-child{border-bottom:0}
-.next .num{width:26px;height:26px;border-radius:50%;background:var(--soft);color:var(--plum);display:flex;align-items:center;justify-content:center;font-weight:700;flex:none;font-size:12px}
-.next .num.done{background:var(--green-bg);color:var(--green)}
-.next .t{flex:1}
-.bars .b{display:grid;grid-template-columns:150px 1fr 34px;gap:8px;align-items:center;font-size:12.5px;margin:5px 0}
-.bars .track{background:var(--soft);border-radius:6px;height:9px;overflow:hidden}
-.bars .fill{background:var(--plum);height:100%}
-.bars .b:nth-child(even) .fill{background:var(--gold)}
-h3.h{margin:0 0 10px;font-size:15px;color:var(--aub)}
-/* guests */
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
-.toolbar .spacer{flex:1}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.fchip{border:1px solid var(--line);background:#fff;border-radius:18px;padding:4px 11px;font-size:12.5px;cursor:pointer}
-.fchip.on{background:var(--aub);border-color:var(--aub);color:#fff}
-.grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(430px,1fr);gap:14px;align-items:start}
-.tablebox{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:calc(100vh - 200px)}
-table{border-collapse:collapse;width:100%;font-size:13px}
-th{position:sticky;top:0;background:#FBF7F9;text-align:left;font-weight:600;padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap;z-index:1;color:var(--aub)}
-td{padding:8px;border-bottom:1px solid #F3ECF0;vertical-align:top}
-tr.row{cursor:pointer} tr.row:hover td{background:#FDFAFC} tr.row.sel td{background:var(--soft)}
-.chip{display:inline-block;border-radius:12px;padding:1px 8px;font-size:11px;font-weight:600;white-space:nowrap}
+.steps{display:grid;gap:10px}
+.stp{display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.stp .num{width:38px;height:38px;border-radius:50%;background:var(--soft);color:var(--plum);display:flex;align-items:center;justify-content:center;font-weight:700}
+.stp.done .num{background:var(--green-bg);color:var(--green)}
+.stp.now{border-color:var(--plum);box-shadow:0 0 0 1px var(--plum) inset}
+.stp.now .num{background:var(--plum);color:#fff}
+.stp h4{margin:0;font-size:15px;color:var(--aub)}
+.stp p{margin:2px 0 0;color:var(--muted);font-size:13.5px}
+.chip{display:inline-block;border-radius:12px;padding:1px 9px;font-size:11.5px;font-weight:600;white-space:nowrap}
 .c-blocked{background:var(--red-bg);color:var(--red)} .c-approval{background:var(--amber-bg);color:var(--amber)}
 .c-ready{background:var(--green-bg);color:var(--green)} .c-drafted{background:var(--blue-bg);color:var(--blue)}
-.c-sent{background:var(--grey-bg);color:var(--grey)} .c-excluded{background:#f4f1f3;color:#9a8f95;text-decoration:line-through}
-.warnn{color:var(--amber);font-weight:600} .blockn{color:var(--red);font-weight:600}
-.panel{position:sticky;top:12px;max-height:calc(100vh - 30px);overflow:auto}
-.panel h3{margin:0;font-size:17px;color:var(--aub)}
-.issues{list-style:none;padding:0;margin:12px 0}
-.issues li{padding:7px 10px;border-radius:7px;margin-bottom:5px;font-size:13px}
-.issues .block{background:var(--red-bg);color:var(--red)} .issues .warn{background:var(--amber-bg);color:var(--amber)} .issues .pend{background:var(--amber-bg);color:var(--amber)} .issues .info{background:var(--blue-bg);color:var(--blue)}
-.kv{display:grid;grid-template-columns:125px 1fr;gap:5px 10px;font-size:13px;margin:10px 0}
-.kv>div:nth-child(odd){color:var(--muted)}
-.tabs{display:flex;gap:4px;margin:12px 0 10px;border-bottom:1px solid var(--line)}
-.tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;padding:8px 10px;color:var(--muted)}
-.tabs button.on{color:var(--plum);border-bottom-color:var(--plum);font-weight:600}
-.mail{border:1px solid var(--line);border-radius:10px;padding:12px;font-size:13px;background:#FDFCFD;white-space:pre-wrap}
-iframe{width:100%;height:620px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.c-sent{background:var(--grey-bg);color:var(--grey)} .c-excluded{background:#f4f1f3;color:#9a8f95}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.toolbar .spacer{flex:1}
+.tip{font-size:13px;color:var(--muted);margin:0 0 10px}
+.tablebox{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:auto;max-height:calc(100vh - 230px)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{position:sticky;top:0;background:#FBF7F9;text-align:left;font-weight:600;padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap;z-index:1;color:var(--aub)}
+td{padding:5px 6px;border-bottom:1px solid #F3ECF0;vertical-align:middle}
+tr:hover td{background:#FDFAFC}
+td input.cell,td select.cell{width:100%;border:1px solid transparent;background:transparent;padding:6px 7px;border-radius:7px;font-size:13.5px}
+td input.cell:hover,td select.cell:hover{border-color:var(--line);background:#fff}
+td input.cell:focus,td select.cell:focus{border-color:var(--plum);background:#fff}
+td input.cell.bad{background:#FFF6F5;border-color:#F3C4BF}
+td input.cell:disabled,td select.cell:disabled{color:#888;cursor:default}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
+.dot.r{background:var(--red)} .dot.a{background:#d99a00} .dot.g{background:#3a9a5b}
+.issues{list-style:none;padding:0;margin:10px 0}
+.issues li{padding:7px 10px;border-radius:8px;margin-bottom:5px;font-size:13.5px}
+.issues .block{background:var(--red-bg);color:var(--red)} .issues .warn{background:var(--amber-bg);color:var(--amber)} .issues .info{background:var(--blue-bg);color:var(--blue)} .issues .pend{background:var(--amber-bg);color:var(--amber)}
 .form{display:grid;grid-template-columns:1fr 1fr;gap:9px 12px}
-.form label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:3px}
+.form label{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:3px}
 .form label.full{grid-column:1/-1}
 .form input,.form select{width:100%}
 .form .fchip{display:inline-flex;flex-direction:row;align-items:center;gap:6px;color:var(--ink)}
 .form .fchip input{width:auto;margin:0}
-.note{background:var(--gold-l);border:1px solid #E6D6B4;color:#5A4520;border-radius:9px;padding:9px 12px;font-size:12.5px;margin:10px 0}
-/* send wizard */
-.steps{display:grid;gap:12px}
-.step{display:grid;grid-template-columns:42px 1fr auto;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-.step .num{width:36px;height:36px;border-radius:50%;background:var(--plum);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
-.step h4{margin:0 0 2px;font-size:15px;color:var(--aub)}
-.step p{margin:0;color:var(--muted);font-size:13px}
-.sentlist{max-height:330px;overflow:auto;border:1px solid var(--line);border-radius:10px;margin-top:10px}
-.sentlist label{display:flex;gap:10px;padding:8px 12px;border-bottom:1px solid #f3ecf0;font-size:13px;align-items:center}
-/* templates */
-.tcard{margin-bottom:14px}
-.thead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.thead h3{margin:0;color:var(--aub)}
+.fchip{border:1px solid var(--line);background:#fff;border-radius:18px;padding:5px 11px;font-size:13px;cursor:pointer}
+.fchip.on{background:var(--aub);border-color:var(--aub);color:#fff}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.note{background:var(--gold-l);border:1px solid #E6D6B4;color:#5A4520;border-radius:10px;padding:10px 12px;font-size:13.5px;margin:10px 0}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:13.5px;margin:10px 0}
+.kv>div:nth-child(odd){color:var(--muted)}
+.mail{border:1px solid var(--line);border-radius:10px;padding:12px;font-size:13.5px;background:#FDFCFD;white-space:pre-wrap}
+iframe{width:100%;height:680px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.tabs{display:flex;gap:4px;margin:0 0 10px;border-bottom:1px solid var(--line)}
+.tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;padding:8px 10px;color:var(--muted)}
+.tabs button.on{color:var(--plum);border-bottom-color:var(--plum);font-weight:600}
+/* approve & send */
+.ps{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media(max-width:1150px){.ps{grid-template-columns:1fr}}
+.psbar{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.track{display:flex;gap:6px;margin:12px 0 4px}
+.track div{flex:1;font-size:12px;text-align:center;padding:7px 4px;border-radius:9px;background:#F5F1F3;color:var(--muted);font-weight:600}
+.track div.done{background:var(--green-bg);color:var(--green)}
+.track div.now{background:var(--plum);color:#fff}
+.actbox{border-top:1px solid var(--line);margin-top:14px;padding-top:14px}
+.actrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.hint{font-size:13px;color:var(--muted);margin:8px 0 0;line-height:1.5}
+.links{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+details.more{margin-top:18px}
+details.more summary{cursor:pointer;color:var(--plum);font-weight:600}
+.big-drop{border:2px dashed #D9C3CF;border-radius:14px;padding:22px;background:#fff;text-align:center}
+.lang-cards{display:grid;gap:12px}
 .ok{color:var(--green);font-weight:600} .no{color:var(--amber);font-weight:600}
-/* soon */
-.soonbox{max-width:720px}
-.soonbox ul{line-height:1.8}
-/* review */
-.rv{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
-@media(max-width:1100px){.rv{grid-template-columns:1fr}}
-.rvbar{display:flex;gap:10px;align-items:center;margin:0 0 10px;flex-wrap:wrap}
-.rvact{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-button.big{padding:10px 18px;font-size:15px}
-.hint{font-size:12.5px;color:var(--muted);margin:10px 0 0;line-height:1.5}
-.helpbox{display:flex;gap:12px;align-items:flex-start;background:#F3EAF0;border:1px solid #E5D3DE;border-radius:12px;padding:10px 14px;margin:0 0 12px;font-size:13.5px;color:#4a2a3d}
-.helpbox .hi{flex:none;width:22px;height:22px;border-radius:50%;background:var(--plum);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-style:italic;font-family:Georgia,serif}
-.helpbox>div{flex:1}
-.helpbox div+div{margin-top:3px}
-button.small{font-size:12px;padding:4px 9px}
-.sub{color:var(--muted);font-size:13.5px;margin-top:2px}
 /* modal */
 .modal-back{position:fixed;inset:0;background:rgba(40,20,32,.45);display:none;align-items:center;justify-content:center;z-index:50}
 .modal-back.show{display:flex}
-.modal{background:#fff;border-radius:14px;max-width:640px;width:92%;padding:22px;max-height:86vh;overflow:auto;border-top:5px solid var(--plum)}
+.modal{background:#fff;border-radius:16px;max-width:640px;width:92%;padding:22px;max-height:88vh;overflow:auto;border-top:5px solid var(--plum)}
 .modal h3{margin:0 0 8px;color:var(--aub)}
-.modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
 .modal ul{padding-left:18px;max-height:260px;overflow:auto}
-.toast{position:fixed;bottom:18px;right:18px;background:var(--aub);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:opacity .25s;z-index:60;pointer-events:none}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:6px 0;cursor:pointer}
+.opt:hover{border-color:var(--plum)}
+.opt input{margin-top:4px}
+.opt b{display:block}
+.toast{position:fixed;bottom:18px;right:18px;background:var(--aub);color:#fff;padding:11px 16px;border-radius:11px;font-size:13.5px;opacity:0;transition:opacity .25s;z-index:60;pointer-events:none;max-width:420px}
 .toast.show{opacity:1}
 </style>
 </head>
 <body>
 <div class="app">
   <aside>
-    <div class="brand"><img id="logo" alt="AWEP"><div class="name">AWEP Events Hub</div><div class="sub">AUDA-NEPAD · African Women's Empowerment Programme</div></div>
-    <div class="evpill hide" id="evpill"></div>
+    <div class="brand" id="brand"><img id="logo" alt="AWEP"><div class="name">AWEP Events Hub</div></div>
     <nav id="nav"></nav>
     <div class="foot">
-      <label for="who">Your name</label>
-      <input type="text" id="who" placeholder="e.g. Danita">
-      <div id="saveState"><span class="dot"></span><span id="saveText">No workbook open</span></div>
-      <div class="row"><button id="btnOpen">Open workbook</button><button id="btnSave" class="primary" disabled>Save</button></div>
+      <div id="me"></div>
+      <div id="saveState"><span class="dot"></span><span id="saveText"></span></div>
+      <button id="btnSave" class="primary hide">Save</button>
     </div>
   </aside>
   <main>
-    <div class="top"><h1 id="title">Welcome</h1><div class="spacer"></div><div id="topActions"></div><button class="ghost small" id="btnTour" title="A one-minute tour of how the Hub works">? Quick tour</button></div>
-    <div class="page" style="padding-bottom:0" id="help"></div>
-    <div class="page" style="padding-top:0" id="page"></div>
+    <div class="top"><div><div class="crumb" id="crumb"></div><h1 id="title"></h1><div class="sub" id="sub"></div></div><div class="spacer"></div><div id="topActions"></div><button class="ghost" id="btnHelp">? Help</button></div>
+    <div class="page" id="page"></div>
   </main>
 </div>
 <input type="file" id="file" accept=".xlsx" class="hide">
@@ -630,582 +626,6 @@ function fileBase(g){
 
 </script>
 <script>
-"use strict";
-/* ================== AWEP Events Hub — site shell ================== */
-const ICONS = {
-  home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
-  guests:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M16 14.6c2.6.2 4.6 1.9 5.3 5.4"/>',
-  send:'<path d="M21 3L10 14"/><path d="M21 3l-7 18-4-7-7-4z"/>',
-  tpl:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
-  log:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-  event:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
-  rsvp:'<path d="M4 12l5 5L20 6"/>', docs:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M13 10h5M13 14h4"/>',
-  follow:'<path d="M4 4h16v12H8l-4 4z"/>', report:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
-  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
-  partner:'<path d="M3 12l4-4 5 3 5-3 4 4-9 7z"/>', grant:'<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.4 1.3-2 3-2s3 .7 3 2-1.3 1.8-3 2.3-3 .9-3 2.4 1.3 2 3 2 3-.6 3-2"/>',
-  book:'<path d="M4 4h11a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M4 17a3 3 0 0 1 3-3h11"/>',
-  check:'<path d="M4 12.5l5 5L20 6.5"/><rect x="2.5" y="2.5" width="19" height="19" rx="4"/>',
-  plus:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>', addp:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M19 8v6M16 11h6"/>'
-};
-const ico = k => `<svg class="ico" viewBox="0 0 24 24">${ICONS[k]}</svg>`;
-const PAGES = [
-  ["home","Home","home"],["newevent","New event","plus"],["add","Add guests","addp"],["review","Review & approve","check"],["guests","All guests","guests"],["send","Send letters","send"],["templates","Letter templates","tpl"],["log","Activity log","log"],["event","Event details","event"]
-];
-const SOON = [
-  ["rsvp","RSVP & registration","rsvp","Personal RSVP link in every invitation, replies update the guest list automatically; dietary, access, travel and accommodation needs; manual updates for people who reply by email."],
-  ["eventdocs","Event-day documents","docs","Name badges and table tents, seating plan from protocol order, sign-in sheets and a door check-in screen, programme / run of show."],
-  ["followup","Follow-up","follow","Reminder drafts a week and a day before (accepted guests only), thank-you letters to attendees, speakers and co-hosts, participation certificates."],
-  ["reports","Reports & social posts","report","Event report draft (invited vs attended by country, sector, gender), donor reporting, dashboard across events, LinkedIn / Instagram / TikTok post drafts with no emojis."],
-  ["speakers","Speakers & panelists","mic","Invites, bios, photos, briefing notes and confirmations in one place."],
-  ["partners","Partners","partner","Meetings, commitments and follow-ups with embassies, member states, CSOs and funders."],
-  ["grants","Grants & deadlines","grant","Calls such as the DAP, CSW side-event deadlines and reporting dates, with reminders; reusable concept note and budget templates."],
-  ["contacts","Contact book","book","One master contact book across all events, tagged by type; event guest lists pulled from it with filters."]
-];
-let route = "home", gFilter = "all", gCat = "", gSearch = "", gSort = "sheet", current = null, tab = "edit", previewUrl = null;
-const selected = new Set();
-
-$("#logo").src = "data:image/png;base64," + ASSETS.logo;
-const SIG_BUILTIN = !!ASSETS.sig;
-try { const s = localStorage.getItem("awepHubSignature"); if (s && !SIG_BUILTIN) { const m = s.match(/^data:image\/(png|jpe?g);base64,(.+)$/); if (m) { IMG.sig = b64ToBytes(m[2]); IMG.sigType = m[1] === "png" ? "png" : "jpg"; } } } catch(e){}
-try { $("#who").value = localStorage.getItem("awepHubName") || ""; } catch(e){}
-$("#who").addEventListener("change", () => { try { localStorage.setItem("awepHubName", clean($("#who").value)); } catch(e){} });
-
-function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),2600); }
-
-/* ---------- navigation ---------- */
-function counts(){ const c={all:0,blocked:0,approval:0,ready:0,drafted:0,sent:0,excluded:0}; if (S) for (const g of S.guests){ c.all++; c[g._status]++; } return c; }
-function renderNav(){
-  const c = counts();
-  const badge = {review: S ? (c.approval + c.blocked) || "" : "", guests: S ? c.all : "", send: S ? (c.ready + c.drafted) || "" : "", templates: S ? (Object.values(S.templates).filter(t=>t.body && (!t.letterOk||!t.emailOk) && usedLangs().has(t.lang.toLowerCase())).length || "") : ""};
-  $("#nav").innerHTML = PAGES.map(([k,l,i]) => `<a href="#${k}" class="${route===k?"on":""} ${!S && k!=="home" && k!=="newevent"?"off":""}">${ico(i)}${l}${badge[k]!==undefined && badge[k]!==""?`<span class="n">${badge[k]}</span>`:""}</a>`).join("") +
-    `<div class="sec">Coming next</div>` + SOON.map(([k,l,i]) => `<a href="#${k}" class="soon ${route===k?"on":""}">${ico(i)}${l}<span class="n">Soon</span></a>`).join("");
-}
-function usedLangs(){ return new Set(S.guests.filter(g=>!g._excluded).map(g => g._lang.toLowerCase())); }
-window.addEventListener("hashchange", () => { route = location.hash.slice(1) || "home"; if (!S && route !== "home" && route !== "newevent" && !SOON.find(s=>s[0]===route)) route = "home"; draw(); });
-function go(r, opts){ if (opts && opts.filter) { gFilter = opts.filter; selected.clear(); } if (location.hash === "#"+r) draw(); else location.hash = r; }
-
-function draw(){
-  renderNav(); renderSave();
-  $("#help").innerHTML = helpBox(S || route === "newevent" ? route : "");
-  $("#topActions").innerHTML = "";
-  if (S) { $("#evpill").classList.remove("hide"); $("#evpill").innerHTML = `<b>${esc(S.brief["Event name"]||"Event")}</b>${esc(S.brief["Event date"]||"")} · ${esc(S.brief["City / venue"]||"")}`; }
-  const soon = SOON.find(s => s[0] === route);
-  if (soon) return pageSoon(soon);
-  if (route === "newevent") return pageNewEvent();
-  if (!S) return pageWelcome();
-  ({home:pageHome, add:pageAdd, review:pageReview, guests:pageGuests, send:pageSend, templates:pageTemplates, log:pageLog, event:pageEvent}[route] || pageHome)();
-}
-
-/* ---------- open / save ---------- */
-const FSA = !!window.showOpenFilePicker;
-async function openWorkbook(){
-  if (S && S.dirty && !(await confirmModal("Unsaved changes", "<p>You have changes that aren't saved. Open another workbook and lose them?</p>", "Open anyway"))) return;
-  if (FSA) {
-    try {
-      const [h] = await window.showOpenFilePicker({types:[{description:"Excel workbook", accept:{"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":[".xlsx"]}}]});
-      let perm = "denied"; try { perm = await h.requestPermission({mode:"readwrite"}); } catch(e){}
-      await loadFile(await h.getFile(), perm === "granted" ? h : null);
-    } catch(e) { if (e && e.name !== "AbortError") $("#file").click(); }
-  } else $("#file").click();
-}
-$("#btnOpen").onclick = openWorkbook;
-$("#file").addEventListener("change", e => { if (e.target.files[0]) loadFile(e.target.files[0], null); e.target.value = ""; });
-$("#btnSave").onclick = () => saveNow(true);
-$("#btnTour").onclick = () => tour(0);
-window.addEventListener("beforeunload", e => { if (S && S.dirty) { e.preventDefault(); e.returnValue = ""; } });
-
-function onLoaded(){ selected.clear(); current = null; gFilter = "all"; lastZip = null; route = "home"; if (location.hash !== "#home") location.hash = "home"; draw(); if (pending.length) autoSave(); toast(`Opened ${S.fileName}`); }
-
-function renderSave(){
-  const el = $("#saveState"); el.className = "";
-  if (!S) { $("#saveText").textContent = "No workbook open"; $("#btnSave").disabled = true; return; }
-  $("#btnSave").disabled = false;
-  if (S.saveError) { el.className = "err"; $("#saveText").textContent = S.saveError; }
-  else if (S.dirty) { el.className = "dirty"; $("#saveText").textContent = S.handle ? "Saving…" : "Unsaved changes: click Save"; }
-  else { el.className = "ok"; $("#saveText").textContent = S.savedAt ? `Saved to ${S.fileName} at ${S.savedAt}` : `${S.fileName}${S.handle ? " · saves automatically" : ""}`; }
-}
-let saving = null;
-async function autoSave(){ renderNav(); if (S && S.handle) { await saveNow(false); } renderSave(); }
-async function saveNow(manual){
-  if (!S) return false;
-  if (saving) { await saving; if (!S.dirty) return true; }
-  saving = (async () => {
-    const blob = await workbookBlob();
-    if (S.handle) {
-      try {
-        const f = await S.handle.getFile();
-        if (S.mtime && f.lastModified !== S.mtime) {
-          S.saveError = "Not saved: the file was changed by someone else";
-          renderSave();
-          showModal("The workbook changed since you opened it", `<p>Someone (or OneDrive/SharePoint sync) saved a newer version of <b>${esc(S.fileName)}</b> after you opened it. To avoid overwriting their work, nothing was saved.</p><p>Click <b>Download my version</b> to keep your changes as a separate copy, then re-open the shared workbook and redo them there.</p>`,
-            [["Close",null],["Download my version", () => download(blob, S.fileName.replace(/\.xlsx$/i," (my changes).xlsx")), true]]);
-          return false;
-        }
-        const w = await S.handle.createWritable(); await w.write(blob); await w.close();
-        S.mtime = (await S.handle.getFile()).lastModified;
-        S.dirty = false; S.saveError = ""; S.savedAt = nowStamp().slice(11);
-        return true;
-      } catch(e) {
-        S.saveError = "Couldn't save: close the workbook in Excel, then click Save";
-        return false;
-      }
-    } else {
-      if (!(await download(blob, S.fileName))) { S.saveError = "Not saved: the download was cancelled"; return false; }
-      S.dirty = false; S.saveError = ""; S.savedAt = nowStamp().slice(11);
-      if (manual) showModal("Workbook downloaded", `<p>Your browser can't save into the original file, so the updated workbook was downloaded as <b>${esc(S.fileName)}</b>.</p><p>Replace the team's shared copy with it.</p><p class="small muted">Tip: open this site in Microsoft Edge or Google Chrome and use <b>Open workbook</b> so it saves directly into the file.</p>`, [["OK",null,true]]);
-      return true;
-    }
-  })();
-  const r = await saving; saving = null; renderSave(); return r;
-}
-
-/* ---------- welcome ---------- */
-function pageWelcome(){
-  $("#title").textContent = "Welcome";
-  $("#page").innerHTML = `<div class="welcome"><img src="data:image/png;base64,${ASSETS.logo}" alt="">
-    <h2>AWEP Events Hub</h2>
-    <p class="muted">Guest lists, protocol checks, personalised invitation letters and Outlook drafts for AUDA-NEPAD / AWEP events.<br>Everything stays on this computer: nothing is uploaded anywhere.</p>
-    <div style="margin-top:18px"><button class="gold" id="wNew" style="padding:10px 18px">+ Create a new event</button></div>
-    <div class="drop" id="drop"><h3>Or open an existing event workbook</h3><div class="muted">Click to choose the event's .xlsx file, or drop it here.${FSA ? "<br>Changes are saved straight back into the file." : ""}</div></div></div>`;
-  const d = $("#drop");
-  $("#wNew").onclick = () => go("newevent");
-  d.onclick = openWorkbook;
-  d.ondragover = e => { e.preventDefault(); d.classList.add("over"); };
-  d.ondragleave = () => d.classList.remove("over");
-  d.ondrop = async e => {
-    e.preventDefault(); d.classList.remove("over");
-    const it = e.dataTransfer.items && e.dataTransfer.items[0];
-    if (it && it.getAsFileSystemHandle) {
-      try { const h = await it.getAsFileSystemHandle(); let perm="denied"; try { perm = await h.requestPermission({mode:"readwrite"}); } catch(_){}
-        return loadFile(await h.getFile(), perm === "granted" ? h : null); } catch(_){}
-    }
-    if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0], null);
-  };
-}
-
-/* ---------- home ---------- */
-function pageHome(){
-  $("#title").textContent = "Home";
-  const c = counts(), langs = usedLangs();
-  const unTpl = [...langs].map(l => S.templates[l]).filter(t => t && t.body && (!t.letterOk || !t.emailOk));
-  const langPending = S.guests.filter(g => !g._excluded && !g["Sent On"] && !g["Language Approved By"]).length;
-  const steps = [
-    [S.guests.length > 0, S.guests.length ? `${S.guests.length} guests on the list` : "Add guests from a guest list or the contact list", "add", "Add guests"],
-    [unTpl.length === 0, unTpl.length ? `Approve the ${unTpl.map(t=>t.lang).join(", ")} letter template${unTpl.length>1?"s":""}` : "Letter templates approved", "templates", "Open templates"],
-    [c.approval + c.blocked === 0, c.approval + c.blocked ? `Review and approve ${c.approval + c.blocked} guest${c.approval + c.blocked > 1 ? "s" : ""} (${c.blocked} need a detail fixed first)` : "Everyone has been reviewed", "review", "Start reviewing"],
-    [!!IMG.sig, IMG.sig ? "Signature loaded on this computer" : "Load the signature image on this computer", "event", "Load"],
-    [c.ready === 0, c.ready ? `Create Outlook emails for ${c.ready} approved guest${c.ready>1?"s":""}` : "No approved guests waiting for an email", "send", "Create emails"],
-    [c.drafted === 0, c.drafted ? `Send ${c.drafted} email${c.drafted>1?"s":""} from Outlook, then mark them as sent` : "Nothing waiting to be marked as sent", "send", "Mark as sent"]
-  ];
-  const byCat = {}; for (const g of S.guests) if (!g._excluded) { const k = g.Category || "Not categorised"; byCat[k] = (byCat[k]||0)+1; }
-  const byCountry = {}; for (const g of S.guests) if (!g._excluded) { const k = g.Country || "Not set"; byCountry[k] = (byCountry[k]||0)+1; }
-  const bars = (obj, n) => { const arr = Object.entries(obj).sort((a,b)=>b[1]-a[1]).slice(0,n); const max = Math.max(1,...arr.map(a=>a[1])); return arr.map(([k,v]) => `<div class="b"><span>${esc(k)}</span><div class="track"><div class="fill" style="width:${v/max*100}%"></div></div><span>${v}</span></div>`).join(""); };
-  const target = Number(S.brief["Target number of invitees"]) || 0;
-  $("#page").innerHTML = `
-    <div class="hero"><div class="gl"></div><div><h2>${esc(S.brief["Event name"]||"")}</h2><div class="meta">${esc(S.brief["Event date"]||"")} · ${esc(S.brief["City / venue"]||"")}${target?` · target ${target} invitees`:""}</div></div></div>
-    <div class="tiles">
-      <div class="tile" data-f="all"><b>${c.all - c.excluded}</b><span>Guests on the list</span></div>
-      <div class="tile red" data-f="blocked"><b>${c.blocked}</b><span>Need fixing</span></div>
-      <div class="tile amber" data-f="approval"><b>${c.approval}</b><span>To approve</span></div>
-      <div class="tile green" data-f="ready"><b>${c.ready}</b><span>Approved, email not created</span></div>
-      <div class="tile blue" data-f="drafted"><b>${c.drafted}</b><span>Email created, not sent</span></div>
-      <div class="tile" data-f="sent"><b>${c.sent}</b><span>Sent (locked)</span></div>
-    </div>
-    <div class="two">
-      <div class="card"><h3 class="h">What to do next</h3><ul class="next">${steps.map(([done,t,r,b,f],i) => `<li><span class="num ${done?"done":""}">${done?"✓":i+1}</span><span class="t">${esc(t)}</span>${done?"":`<button data-go="${r}" data-f="${f||""}">${b}</button>`}</li>`).join("")}</ul></div>
-      <div class="card"><h3 class="h">Guests by group</h3><div class="bars">${bars(byCat, 9)}</div><h3 class="h" style="margin-top:14px">Top countries</h3><div class="bars">${bars(byCountry, 6)}</div></div>
-    </div>`;
-  document.querySelectorAll(".tile").forEach(t => t.onclick = () => { const f = t.dataset.f; if (f === "blocked" || f === "approval") { RV.filter = f === "blocked" ? "fix" : "ok"; RV.id = null; go("review"); } else go("guests", {filter: f}); });
-  document.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { if (b.dataset.go === "review") { RV.filter = "todo"; RV.id = null; } go(b.dataset.go, b.dataset.f ? {filter:b.dataset.f} : null); });
-}
-
-/* ---------- guests ---------- */
-const STATUS = { blocked:["Needs fixing","c-blocked",1], approval:["To approve","c-approval",2], ready:["Approved","c-ready",3], drafted:["Email created","c-drafted",4], sent:["Sent","c-sent",5], excluded:["Not inviting","c-excluded",6] };
-function visible(){
-  const q = gSearch.toLowerCase();
-  let list = S.guests.filter(g => (gFilter === "all" ? g._status !== "excluded" : g._status === gFilter) && (!gCat || (g.Category||"Not categorised") === gCat) &&
-    (!q || [g.Title,g["First Name"],g.Surname,g.Organisation,g.Email,g.ID,g.Country,g.Category,g.Position].join(" ").toLowerCase().includes(q)));
-  if (gSort === "rank") list = [...list].sort((a,b) => a._rank - b._rank || a.Surname.localeCompare(b.Surname));
-  if (gSort === "status") list = [...list].sort((a,b) => STATUS[a._status][2] - STATUS[b._status][2] || a.row - b.row);
-  if (gSort === "name") list = [...list].sort((a,b) => a.Surname.localeCompare(b.Surname));
-  return list;
-}
-function selGuests(){ const vis = new Set(visible().map(g => g.ID)); return S.guests.filter(g => selected.has(g.ID) && vis.has(g.ID)); }
-function pageGuests(){
-  $("#title").textContent = "Guests";
-  $("#topActions").innerHTML = `<button id="btnAdd" class="gold">+ Add guest</button>`;
-  $("#btnAdd").onclick = () => { current = "__new"; tab = "edit"; drawGuests(); };
-  const c = counts();
-  const cats = [...new Set(S.guests.map(g => g.Category || "Not categorised"))].sort();
-  $("#page").innerHTML = `
-    <div class="chips" id="chips">${[["all","All",c.all-c.excluded],["blocked","Needs fixing",c.blocked],["approval","To approve",c.approval],["ready","Approved",c.ready],["drafted","Email created",c.drafted],["sent","Sent",c.sent],["excluded","Not inviting",c.excluded]]
-      .map(([k,l,n]) => `<span class="fchip ${gFilter===k?"on":""}" data-f="${k}">${l} · ${n}</span>`).join("")}</div>
-    <div class="toolbar">
-      <input type="text" id="search" placeholder="Search name, organisation, email…" style="width:260px" value="${esc(gSearch)}">
-      <select id="cat"><option value="">All groups</option>${cats.map(k => `<option ${gCat===k?"selected":""}>${esc(k)}</option>`).join("")}</select>
-      <select id="sort">${[["sheet","Sheet order"],["rank","Protocol rank"],["status","Status"],["name","Surname A–Z"]].map(([v,l]) => `<option value="${v}" ${gSort===v?"selected":""}>${l}</option>`).join("")}</select>
-      <div class="spacer"></div>
-      <span class="small muted" id="selInfo"></span>
-      <button id="bApprove" title="Approve all ticked guests at once (only those with nothing to fix). Nothing is sent.">Approve ticked</button>
-      <button id="bMore" title="Remove approval, don't invite, record a send done outside the Hub">More ▾</button>
-      <button id="bReview" class="primary" title="Check and approve people one at a time, editing as you go">Review &amp; approve one by one</button>
-    </div>
-    <div class="grid"><div class="tablebox"><table><thead><tr><th><input type="checkbox" id="selAll" title="Select all shown"></th><th>Status</th><th>Guest</th><th>Organisation</th><th>Email</th><th>Lang</th><th>Checks</th></tr></thead><tbody id="rows"></tbody></table></div>
-    <div class="card panel" id="panel"></div></div>`;
-  document.querySelectorAll(".fchip").forEach(el => el.onclick = () => { gFilter = el.dataset.f; selected.clear(); pageGuests(); });
-  $("#search").oninput = e => { gSearch = e.target.value; selected.clear(); drawRows(); };
-  $("#cat").onchange = e => { gCat = e.target.value; selected.clear(); drawRows(); };
-  $("#sort").onchange = e => { gSort = e.target.value; drawRows(); };
-  $("#bApprove").onclick = approveSelected;
-  $("#bReview").onclick = () => { RV.filter = "todo"; RV.id = null; go("review"); };
-  $("#bMore").onclick = moreMenu;
-  drawGuests();
-}
-function drawGuests(){ drawRows(); showPanel(); }
-function drawRows(){
-  const list = visible();
-  $("#rows").innerHTML = list.map(g => {
-    const [lbl, cls] = STATUS[g._status];
-    const nb = g._issues.filter(i=>i.level==="block").length;
-    const checks = g._status === "excluded" ? "" : (nb ? `<span class="blockn">${nb} to fix</span> ` : "") + (g._warns ? `<span class="warnn">${g._warns} to check</span>` : (nb ? "" : `<span class="muted">OK</span>`));
-    return `<tr class="row ${current===g.ID?"sel":""}" data-id="${esc(g.ID)}">
-      <td><input type="checkbox" class="cb" data-id="${esc(g.ID)}" ${selected.has(g.ID)?"checked":""}></td>
-      <td><span class="chip ${cls}">${lbl}</span></td>
-      <td>${esc(`${g._title||g.Title} ${g["First Name"]} ${g.Surname}`)}<div class="small muted">${esc(g.Position)}</div></td>
-      <td>${esc(g.Organisation)}<div class="small muted">${esc(g.Country)}</div></td>
-      <td class="small">${esc(g.Email)}</td><td class="small">${esc(g._lang)}</td><td class="small">${checks}</td></tr>`;
-  }).join("") || `<tr><td colspan="7" class="muted" style="padding:24px">No guests in this view.</td></tr>`;
-  document.querySelectorAll("tr.row").forEach(tr => tr.onclick = e => { if (e.target.classList.contains("cb")) return; current = tr.dataset.id; if (current !== "__new" && tab !== "email" && tab !== "letter") tab = "edit"; drawRows(); showPanel(); });
-  document.querySelectorAll(".cb").forEach(cb => cb.onchange = () => { cb.checked ? selected.add(cb.dataset.id) : selected.delete(cb.dataset.id); selInfo(); });
-  $("#selAll").checked = list.length > 0 && list.every(g => selected.has(g.ID));
-  $("#selAll").onchange = () => { for (const g of list) $("#selAll").checked ? selected.add(g.ID) : selected.delete(g.ID); drawRows(); };
-  selInfo();
-}
-function selInfo(){ const n = selGuests().length; $("#selInfo").textContent = n ? `${n} selected` : "Tick guests to act on them"; }
-
-const FIELDS = [["Title","Title"],["First Name","First name"],["Surname","Surname"],["Position","Position",1],["Organisation","Organisation",1],["Country","Country"],["Email","Email"],["CC Emails","Also copy (CC), separated by ;",1],["Email Type","Email type",0,["","Personal","Official inbox","Generic"]],["Category","Group",0,["","Central bank / regulator","DFI / investor","Commercial bank","Women-led bank / MFI","Women entrepreneurs / association","Cooperative / savings group","Fintech","Government","Diplomatic mission","UN / multilateral","Development partner / foundation","Civil society","Academia / think tank","Media","Private sector","Speaker"]],["Letter Language","Letter language",0,["","English","French","Portuguese","Spanish","Kiswahili","Arabic"]],["Source","Source"],["Source Link / Evidence","Source link / evidence",1],["Salutation Override","Special greeting (leave blank to use the rules)",1],["RSVP","RSVP",0,["","Not yet","Accepted","Declined","Delegate","No reply"]],["Notes","Notes",1]];
-
-async function showPanel(){
-  const P = $("#panel"); if (!P) return;
-  if (current === "__new") return editForm(null);
-  const g = S.guests.find(x => x.ID === current);
-  if (!g) { P.innerHTML = `<h3>Guest details</h3><p class="muted">Click a guest to see their checks, the exact email and the exact letter, or to edit their details.</p><div class="note">Approving a guest confirms you have looked at their letter and email. Anyone can edit details; editing an approved guest removes the approval so it gets checked again.</div>`; return; }
-  const [lbl, cls] = STATUS[g._status];
-  const canPreview = g._canBuild && !badChars([g.Title,g["First Name"],g.Surname,g.Position,g.Organisation,g.Country,g["Salutation Override"]].join(" ")).length;
-  let h = `<div style="display:flex;justify-content:space-between;gap:8px;align-items:start"><div><h3>${esc(`${g._title||g.Title} ${g["First Name"]} ${g.Surname}`)}</h3><div class="muted small">${esc(g.Position)}${g.Position&&g.Organisation?", ":""}${esc(g.Organisation)}</div></div><span class="chip ${cls}">${lbl}</span></div>
-    <div class="tabs">${[["edit","Details"],["email","Email"],["letter","Letter"]].map(([k,l]) => `<button data-t="${k}" class="${tab===k?"on":""}">${l}</button>`).join("")}</div><div id="pv"></div>`;
-  P.innerHTML = h;
-  P.querySelectorAll(".tabs button").forEach(b => b.onclick = () => { tab = b.dataset.t; showPanel(); });
-  const pv = $("#pv");
-  if (tab === "checks") tab = "edit";
-  if (false) {
-    pv.innerHTML = (g._issues.length ? `<ul class="issues">${g._issues.map(i => `<li class="${i.level}">${i.level==="block"?"<b>Fix:</b> ":i.level==="warn"?"<b>Check:</b> ":i.level==="pend"?"<b>Approve:</b> ":""}${esc(i.msg)}</li>`).join("")}</ul>` : `<ul class="issues"><li class="info">No problems found.</li></ul>`) +
-      `<div class="kv"><div>Email</div><div>${esc(g.Email)} ${g["Email Type"]?`<span class="muted small">(${esc(g["Email Type"])})</span>`:""}</div>
-      <div>Group</div><div>${esc(g.Category)}</div><div>Source</div><div>${esc(g.Source)} ${g["Source Link / Evidence"]?`<div class="small muted">${esc(g["Source Link / Evidence"])}</div>`:""}</div>
-      <div>Language</div><div>${esc(g._lang)} ${g["Language Approved By"]?`· approved by ${esc(g["Language Approved By"])}`:`<span class="no">· not approved yet</span>`}</div>
-      <div>Approved to send</div><div>${g["Approved to Send By"]?`${esc(g["Approved to Send By"])} · ${esc(g["Approved On"])}`:"—"}</div>
-      <div>Draft made</div><div>${esc(g["Draft Made On"]||"—")}</div><div>Sent</div><div>${g["Sent On"]?`${esc(g["Sent On"])} by ${esc(g["Sent By"])}`:"—"}</div>
-      ${g.Notes?`<div>Notes</div><div>${esc(g.Notes)}</div>`:""}<div>Workbook row</div><div>${g.row} · ${esc(g.ID)}</div></div>` +
-      (g._status === "drafted" ? `<div class="note">This guest already has a draft. If it was <b>not</b> sent and needs correcting, edit the details, then <button id="bRemake">Remake draft</button></div>` : "");
-    const rb = $("#bRemake"); if (rb) rb.onclick = () => remakeDraft(g);
-  } else if (tab === "email" || tab === "letter") {
-    if (!canPreview) { pv.innerHTML = `<p class="muted">The ${tab} appears once the problems under <b>Checks</b> marked "Fix" (title, surname, organisation, template, language) are sorted.</p>`; return; }
-    if (tab === "email") pv.innerHTML = `<div class="kv"><div>To</div><div>${esc(`${g._title} ${g["First Name"]} ${g.Surname}`)} &lt;${esc(g.Email)}&gt;</div>${[clean(S.brief["CC on every email"]),g["CC Emails"]].filter(Boolean).length?`<div>Cc</div><div>${esc([clean(S.brief["CC on every email"]),g["CC Emails"]].filter(Boolean).join("; "))}</div>`:""}<div>Subject</div><div>${esc(emailSubject(g))}</div><div>Attachment</div><div>${esc(fileBase(g))}.pdf</div></div><div class="mail">${esc(emailText(g))}</div>`;
-    else {
-      pv.innerHTML = `<p class="muted small">Building the letter…</p>`;
-      const bytes = await buildPdf(g);
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-      previewUrl = URL.createObjectURL(new Blob([bytes], {type:"application/pdf"}));
-      if (current === g.ID && tab === "letter") pv.innerHTML = `<iframe src="${previewUrl}#toolbar=0&view=FitH"></iframe>`;
-    }
-  } else {
-    const issues = g._issues.length ? `<ul class="issues">${g._issues.map(i => `<li class="${i.level}">${i.level==="block"?"<b>Fix:</b> ":i.level==="warn"?"<b>Check:</b> ":i.level==="pend"?"<b>Approve:</b> ":""}${esc(i.msg)}</li>`).join("")}</ul>` : `<ul class="issues"><li class="info">✓ Everything looks right.</li></ul>`;
-    const status = `<div class="kv" style="margin-top:0"><div>Approved</div><div>${g["Approved to Send By"]?`${esc(g["Approved to Send By"])} · ${esc(g["Approved On"])}`:"Not yet"}</div><div>Email created</div><div>${esc(g["Draft Made On"]||"Not yet")}</div><div>Sent</div><div>${g["Sent On"]?`${esc(g["Sent On"])} by ${esc(g["Sent By"])}`:"Not yet"}</div>${g.Notes?`<div>Notes</div><div>${esc(g.Notes)}</div>`:""}</div>`;
-    const rvBtn = (g._status === "approval" || g._status === "blocked") ? `<div class="note" style="display:flex;gap:10px;align-items:center;justify-content:space-between"><span>Check the letter and approve this person, editing as you go.</span><button class="primary" id="bToRv">Review &amp; approve</button></div>` : "";
-    pv.innerHTML = issues + rvBtn + status + `<div id="pvForm"></div>` + (g._status === "drafted" ? `<div class="note">This person's Outlook email was already created. If it was <b>not</b> sent and needs correcting, edit the details, then <button id="bRemake">Create the email again</button></div>` : "");
-    editFormInto(g, $("#pvForm"));
-    if ($("#bToRv")) $("#bToRv").onclick = () => { RV.filter = "todo"; RV.id = g.ID; go("review"); };
-    if ($("#bRemake")) $("#bRemake").onclick = () => remakeDraft(g);
-  }
-}
-function editFormInto(g, el){ editForm(g, el); }
-function editForm(g, into){
-  const isNew = !g, locked = g && g["Sent On"];
-  const v = k => isNew ? (k === "Letter Language" ? S.defaultLang : k === "Source" ? "Added in the Hub" : "") : g[k];
-  const titles = [...new Set(S.rules.map(r => r.written))];
-  const html = `${isNew ? `<h3>Add a guest</h3><p class="muted small">Fill in at least title, names, organisation and email.</p>` : ""}
-    ${locked ? `<div class="note">This guest has been sent their invitation, so their details are locked.</div>` : ""}
-    <div class="form">${FIELDS.map(([k,l,full,opts]) => `<label class="${full?"full":""}">${l}${opts ? `<select data-k="${k}" ${locked?"disabled":""}>${opts.map(o => `<option ${String(v(k))===o?"selected":""}>${esc(o)}</option>`).join("")}${opts.includes(v(k))?"":`<option selected>${esc(v(k))}</option>`}</select>` :
-      `<input type="text" data-k="${k}" value="${esc(v(k))}" ${k==="Title"?'list="titleList"':""} ${locked?"disabled":""}>`}</label>`).join("")}</div>
-    <datalist id="titleList">${titles.map(t => `<option value="${esc(t)}">`).join("")}</datalist>
-    ${locked ? "" : `<div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">${isNew ? "" : `<button id="bExcl">${g._excluded ? "Invite again" : "Don't invite"}</button>`}<button id="bCancel">Cancel</button><button class="primary" id="bSaveG">${isNew ? "Add guest" : "Save changes"}</button></div>${isNew ? "" : `<p class="hint">Saving changes to an approved person removes the approval, so their new letter gets checked again.</p>`}`}`;
-  const tgt = isNew ? $("#panel") : (into || $("#pv"));
-  tgt.innerHTML = html;
-  if (locked) return;
-  $("#bCancel").onclick = () => { if (isNew) current = null; tab = "edit"; showPanel(); };
-  if (!isNew) $("#bExcl").onclick = () => toggleExclude([g]);
-  $("#bSaveG").onclick = () => {
-    if (!needName()) return;
-    const vals = {}; tgt.querySelectorAll("[data-k]").forEach(el => vals[el.dataset.k] = clean(el.value));
-    if (isNew) {
-      if (!vals.Surname && !vals.Email) return showModal("Missing details", "<p>Add at least a surname and an email.</p>", [["OK",null,true]]);
-      const row = ++S.lastRow;
-      const used = new Set(S.guests.map(x => x.ID)); let n = S.guests.length + 1, id;
-      do { id = `${S.code}-${String(n++).padStart(4,"0")}`; } while (used.has(id));
-      const ng = { row, ID: id }; for (const h of Object.keys(S.col)) ng[h] = ""; ng.ID = id;
-      setCell("Invitees", row, "ID", id);
-      for (const [k,val] of Object.entries(vals)) { ng[k] = val; if (val) setCell("Invitees", row, k, val); }
-      S.guests.push(ng); evaluateAll(); log("Guest added", ng); current = id; tab = "edit";
-      toast("Guest added"); autoSave(); return pageGuests();
-    }
-    const changed = Object.entries(vals).filter(([k,val]) => (g[k]||"") !== val);
-    if (!changed.length) { tab = "edit"; return showPanel(); }
-    for (const [k,val] of changed) { g[k] = val; setCell("Invitees", g.row, k, val); }
-    let note = changed.map(([k]) => k).join(", ");
-    if (g["Approved to Send By"] && !g["Draft Made On"]) { g["Approved to Send By"] = ""; g["Approved On"] = ""; setCell("Invitees", g.row, "Approved to Send By", ""); setCell("Invitees", g.row, "Approved On", ""); note += " (approval removed: needs re-checking)"; }
-    if (changed.some(([k]) => k === "Letter Language") && g["Language Approved By"]) { g["Language Approved By"] = ""; setCell("Invitees", g.row, "Language Approved By", ""); }
-    log("Edited", g, "", note); evaluateAll(); tab = "edit"; toast("Saved"); autoSave(); drawRows(); showPanel(); renderNav();
-  };
-}
-function moreMenu(){
-  const sel = selGuests();
-  showModal("More actions", `<p class="muted">${sel.length} guest(s) selected.</p>
-    <div style="display:grid;gap:8px">
-      <button id="m1">Remove approval from selected</button>
-      <button id="m2">Don't invite selected (keeps them on file, never drafted)</button>
-      <button id="m3">Invite selected again</button>
-      <button id="m4">Record selected as already sent (sent some other way)</button>
-    </div>`, [["Close",null]]);
-  $("#m1").onclick = () => { closeModal(); unapprove(sel); };
-  $("#m2").onclick = () => { closeModal(); toggleExclude(sel.filter(g => !g._excluded && !g["Sent On"])); };
-  $("#m3").onclick = () => { closeModal(); toggleExclude(sel.filter(g => g._excluded)); };
-  $("#m4").onclick = () => { closeModal(); markSent(sel.filter(g => !g["Sent On"])); };
-}
-function toggleExclude(list){
-  if (!needName() || !list.length) return;
-  for (const g of list) { const nv = g._excluded ? "" : "Yes"; g["Do Not Invite"] = nv; setCell("Invitees", g.row, "Do Not Invite", nv); log(nv ? "Marked: don't invite" : "Invited again", g); }
-  evaluateAll(); selected.clear(); autoSave(); pageGuests();
-}
-function approveLanguage(){
-  if (!needName()) return;
-  const sel = selGuests().filter(g => !g["Sent On"] && !g._excluded && !g["Language Approved By"]);
-  if (!sel.length) return showModal("Nothing to approve", "<p>Tick guests whose letter language hasn't been approved yet.</p>", [["OK",null,true]]);
-  const byLang = {}; for (const g of sel) (byLang[g._lang] = byLang[g._lang] || []).push(g);
-  showModal(`Approve letter language for ${sel.length} guest${sel.length>1?"s":""}?`, `<p>You confirm each guest should receive their letter in the language shown:</p><ul>${Object.entries(byLang).map(([l,a]) => `<li><b>${esc(l)}</b>: ${a.length} guest${a.length>1?"s":""}</li>`).join("")}</ul><p class="small muted">To change someone's language first, open the guest and use Edit.</p>`,
-    [["Cancel",null],[`Approve as ${esc(who())}`, () => { for (const g of sel) { g["Language Approved By"] = who(); setCell("Invitees", g.row, "Language Approved By", who()); log(`Language approved (${g._lang})`, g); } evaluateAll(); selected.clear(); autoSave(); pageGuests(); }, true]]);
-}
-function approveSelected(){
-  if (!needName()) return;
-  const sel = selGuests(); if (!sel.length) return showModal("Nothing selected", "<p>Tick the guests you want to approve.</p>", [["OK",null,true]]);
-  const cand = sel.filter(g => g._status === "approval");
-  const tplPending = cand.filter(g => { const t = S.templates[g._lang.toLowerCase()]; return !t || !t.letterOk || !t.emailOk; });
-  const ok = cand.filter(g => !tplPending.includes(g)), skip = sel.length - ok.length;
-  if (!ok.length && tplPending.length) return showModal("Approve the template first", `<p>The ${[...new Set(tplPending.map(g=>g._lang))].join(", ")} letter template hasn't been approved yet. Go to <b>Letter templates</b>, read it and approve it, then approve guests.</p>`, [["Close",null],["Open templates", () => go("templates"), true]]);
-  if (!ok.length) return showModal("Nothing to approve", `<p>None of the selected guests can be approved. Guests marked <b>Blocked</b> must be fixed first; guests already approved, drafted or sent are skipped.</p>`, [["OK",null,true]]);
-  const warned = ok.filter(g => g._warns);
-  showModal(`Approve ${ok.length} guest${ok.length>1?"s":""} for sending?`,
-    `<p>You confirm you have checked each letter and email, that each of these people should receive this invitation, and that the letter language is right for each:</p><ul>${Object.entries(ok.reduce((m,g)=>{m[g._lang]=(m[g._lang]||0)+1;return m},{})).map(([l,n])=>`<li>${esc(l)}: ${n}</li>`).join("")}</ul>` +
-    (warned.length ? `<p><b>${warned.length} of them have points to check:</b></p><ul>${warned.map(g=>`<li>${esc(g["First Name"]+" "+g.Surname)}: ${g._issues.filter(i=>i.level==="warn").map(i=>esc(i.msg)).join(" ")}</li>`).join("")}</ul>` : "") +
-    (tplPending.length ? `<p class="small no">${tplPending.length} skipped because their language template isn't approved yet.</p>` : "") +
-    (skip - tplPending.length > 0 ? `<p class="muted small">${skip - tplPending.length} selected guest(s) skipped (blocked, already approved, drafted or sent).</p>` : ""),
-    [["Cancel",null], [`Approve as ${esc(who())}`, () => {
-      const t = nowStamp();
-      for (const g of ok) { if (!g["Language Approved By"]) { g["Language Approved By"] = who(); setCell("Invitees", g.row, "Language Approved By", who()); } g["Approved to Send By"] = who(); g["Approved On"] = t; setCell("Invitees", g.row, "Approved to Send By", who()); setCell("Invitees", g.row, "Approved On", t); log(`Approved to send (${g._lang})`, g); }
-      selected.clear(); evaluateAll(); autoSave(); pageGuests(); toast(`${ok.length} approved`);
-    }, true]]);
-}
-function unapprove(list){
-  if (!needName()) return;
-  const sel = list.filter(g => g._status === "ready");
-  if (!sel.length) return showModal("Nothing to change", "<p>Select approved guests that don't have a draft yet.</p>", [["OK",null,true]]);
-  for (const g of sel) { g["Approved to Send By"] = ""; g["Approved On"] = ""; setCell("Invitees", g.row, "Approved to Send By", ""); setCell("Invitees", g.row, "Approved On", ""); log("Approval removed", g); }
-  selected.clear(); evaluateAll(); autoSave(); pageGuests();
-}
-
-/* ---------- send letters ---------- */
-function pageSend(){
-  $("#title").textContent = "Send letters";
-  const c = counts(), drafted = S.guests.filter(g => g._status === "drafted");
-  $("#page").innerHTML = `<div class="steps">
-    <div class="step"><div class="num">1</div><div><h4>Approve guests</h4><p>${c.approval} guest(s) waiting for a team member's approval · ${c.blocked} blocked guest(s) to fix first.</p></div><button id="s1">Review guests</button></div>
-    <div class="step"><div class="num">2</div><div><h4>Create Outlook emails</h4><p>${c.ready ? `<b>${c.ready}</b> approved guest(s) ready.` : "No approved guests waiting."} Each gets their PDF letter and a ready Outlook email (a file you double-click), plus a checklist. <b>Nothing is sent at this step.</b>${window.showDirectoryPicker ? " You'll choose a folder to save them in." : " They download as a zip."}</p></div><button id="s2" class="primary" ${c.ready?"":"disabled"} title="Creates one email per approved guest with their letter attached. Nothing is sent.">Create ${c.ready||""} email${c.ready===1?"":"s"}</button></div>
-    <div class="step"><div class="num">3</div><div><h4>Send from Outlook</h4><p>Open the <b>Outlook drafts</b> folder and double-click each file: it opens in Outlook as a new email with the letter attached. Check that the name, greeting and attachment match, then press <b>Send</b>. If a file opens in another program: right-click › Open with › Outlook.</p></div>${lastZip ? `<button id="s3">Download drafts again</button>` : "<span></span>"}</div>
-    <div class="step" style="align-items:start"><div class="num">4</div><div><h4>Mark as sent</h4><p>Tick the people whose emails have left your Outbox. They are then locked, so nobody can invite them a second time.</p>
-      ${drafted.length ? `<div class="sentlist">${drafted.map(g => `<label><input type="checkbox" class="sc" data-id="${esc(g.ID)}"> ${esc(`${g._title} ${g["First Name"]} ${g.Surname}`)} <span class="muted small">&lt;${esc(g.Email)}&gt; · draft ${esc(g["Draft Made On"])}</span></label>`).join("")}</div>
-      <div style="display:flex;gap:8px;margin-top:8px"><button id="sAll">Tick all</button><button id="s4" class="primary">Mark ticked as sent</button></div>` : `<p class="muted small" style="margin-top:6px">No drafts waiting.</p>`}</div><span></span></div>
-  </div>`;
-  $("#s1").onclick = () => go("guests", {filter: c.blocked && !c.approval ? "blocked" : "approval"});
-  $("#s2").onclick = makeDraftsFlow;
-  if ($("#s3")) $("#s3").onclick = () => download(lastZip.blob, lastZip.name);
-  if ($("#sAll")) $("#sAll").onclick = () => document.querySelectorAll(".sc").forEach(x => x.checked = true);
-  if ($("#s4")) $("#s4").onclick = () => { const ids = new Set([...document.querySelectorAll(".sc:checked")].map(x => x.dataset.id)); markSent(S.guests.filter(g => ids.has(g.ID))); };
-}
-function needSig(){ if (IMG.sig) return true; showModal("Load the signature first", "<p>Letters are signed with the signatory's signature image, which is kept on each computer rather than in the site. Go to <b>Event details</b> and click <b>Load signature image</b>.</p>", [["Close",null],["Open Event details", () => go("event"), true]]); return false; }
-async function makeDraftsFlow(){
-  if (!needName() || !needSig()) return;
-  const ready = S.guests.filter(g => g._status === "ready");
-  if (!ready.length) return;
-  let dir = null;
-  if (window.showDirectoryPicker) {
-    try { dir = await window.showDirectoryPicker({mode:"readwrite", id:"awepDrafts"}); }
-    catch(e) { if (e && e.name === "AbortError") { if (!(await confirmModal("No folder chosen", "<p>Download the drafts as a zip file instead?</p>", "Download zip"))) return; } }
-  }
-  await produceDrafts(ready, [], "", dir);
-}
-async function remakeDraft(g){
-  if (!needName() || !needSig()) return;
-  if (g._blocked) return showModal("Fix the problems first", "<p>This guest has problems marked Fix under Checks.</p>", [["OK",null,true]]);
-  showModal("Remake this draft?", `<p>Only do this if the first draft for <b>${esc(g["First Name"]+" "+g.Surname)}</b> was <b>not sent</b>. Delete the old draft file so the two can't be mixed up.</p><p>Reason (goes into the activity log):</p><textarea id="rr" rows="2" placeholder="e.g. corrected title; old draft deleted unsent"></textarea>`,
-    [["Cancel",null],["Remake draft", async () => { const r = clean($("#rr").value); if (!r) return setTimeout(()=>showModal("Reason needed","<p>Give a reason.</p>",[["OK",null,true]]),30); await produceDrafts([], [g], r, null); }, true]]);
-}
-async function produceDrafts(ready, redo, reason, dir){
-  const list = [...ready, ...redo];
-  showModal("Making drafts…", `<p id="prog">0 / ${list.length}</p>`, []);
-  const stamp = nowStamp().replace(/[: ]/g,"-"), folderName = `${S.prefix}_drafts_${stamp}`;
-  const files = [];
-  const rows = [["Guest ID","Guest","Organisation","Email","CC","Language","PDF letter","Outlook draft","Approved by","Draft made by"]];
-  const t = nowStamp();
-  for (let i = 0; i < list.length; i++) {
-    const g = list[i], base = fileBase(g), pdfName = base + ".pdf", emlName = base + ".eml";
-    const pdf = await buildPdf(g);
-    files.push(["Letters (PDF)", pdfName, pdf], ["Outlook drafts", emlName, buildEml(g, pdf, pdfName)]);
-    rows.push([g.ID, `${g._title} ${g["First Name"]} ${g.Surname}`, g.Organisation, g.Email, g["CC Emails"], g._lang, pdfName, emlName, g["Approved to Send By"], who()]);
-    const pe = $("#prog"); if (pe) pe.textContent = `${i+1} / ${list.length}`;
-  }
-  const csv = "﻿" + rows.map(r => r.map(v => `"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\r\n");
-  const readme = `1. Open the "Outlook drafts" folder.\r\n2. Double-click a file. It opens in Outlook as a new email with the letter attached.\r\n   (If it opens in another program: right-click > Open with > Outlook.)\r\n3. Check the name in the To line, the greeting and the attached letter all match. Then press Send.\r\n4. In the AWEP Events Hub, go to Send letters > Mark as sent and tick the guests you sent.\r\nChecklist.csv lists every guest with their files, for ticking off.\r\n`;
-  let savedWhere = "";
-  try {
-    if (!dir) throw new Error("zip");
-    const root = await dir.getDirectoryHandle(folderName, {create:true});
-    const write = async (sub, name, data) => { const d = sub ? await root.getDirectoryHandle(sub, {create:true}) : root; const fh = await d.getFileHandle(name, {create:true}); const w = await fh.createWritable(); await w.write(data); await w.close(); };
-    for (const [sub, name, data] of files) await write(sub, name, data);
-    await write("", "Checklist.csv", csv); await write("", "READ ME FIRST.txt", readme);
-    savedWhere = `in the folder <b>${esc(dir.name)}\\${esc(folderName)}</b>`;
-  } catch(e) {
-    const zip = new JSZip(), f = zip.folder(folderName);
-    for (const [sub, name, data] of files) f.file(`${sub}/${name}`, data);
-    f.file("Checklist.csv", csv); f.file("READ ME FIRST.txt", readme);
-    lastZip = { blob: await zip.generateAsync({type:"blob"}), name: folderName + ".zip" };
-    download(lastZip.blob, lastZip.name);
-    savedWhere = `as <b>${esc(lastZip.name)}</b> in your Downloads (unzip it first)`;
-  }
-  for (const g of list) { g["Draft Made On"] = t; setCell("Invitees", g.row, "Draft Made On", t); log(redo.includes(g) ? "Draft remade" : "Draft made", g, fileBase(g) + ".eml", redo.includes(g) ? reason : ""); }
-  evaluateAll(); await autoSave();
-  showModal(`${list.length} draft${list.length===1?"":"s"} ready`, `<p>Saved ${savedWhere}.</p><p>Now open the <b>Outlook drafts</b> folder, double-click each file, check it and press Send. Then come back to <b>Send letters</b> and mark them as sent.</p>${S.handle ? "" : `<p class="note">Remember to click <b>Save</b> (bottom left) so the workbook records these drafts.</p>`}`, [["OK", () => draw(), true]]);
-}
-function markSent(list){
-  if (!needName()) return;
-  list = list.filter(g => !g["Sent On"]);
-  if (!list.length) return showModal("Nothing to mark", "<p>Tick guests whose emails you have sent.</p>", [["OK",null,true]]);
-  const manual = list.filter(g => !g["Draft Made On"]);
-  showModal(`Mark ${list.length} guest${list.length>1?"s":""} as sent?`,
-    `<p>Only do this once the emails have actually left your Outbox. These guests will be <b>locked</b>.</p><ul>${list.map(g=>`<li>${esc(g._title+" "+g["First Name"]+" "+g.Surname)} &lt;${esc(g.Email)}&gt;</li>`).join("")}</ul>` +
-    (manual.length ? `<p><b>${manual.length}</b> of them have no draft from the Hub (sent some other way). Say how:</p><textarea id="mr" rows="2" placeholder="e.g. sent from Outlook on 15 Oct by Danita"></textarea>` : ""),
-    [["Cancel",null], ["Mark as sent", () => {
-      let reason = ""; if (manual.length) { reason = clean($("#mr").value); if (!reason) return setTimeout(()=>showModal("Reason needed","<p>Say how the guests without a draft were sent.</p>",[["OK",null,true]]),30); }
-      const t = nowStamp();
-      for (const g of list) { g["Sent On"] = t; g["Sent By"] = who(); setCell("Invitees", g.row, "Sent On", t); setCell("Invitees", g.row, "Sent By", who()); log(manual.includes(g) ? "Recorded as sent (outside the Hub)" : "Sent", g, "", manual.includes(g) ? reason : ""); }
-      selected.clear(); evaluateAll(); autoSave(); draw(); toast(`${list.length} marked as sent`);
-    }, true]]);
-}
-
-/* ---------- templates ---------- */
-let tplEdit = null;
-function pageTemplates(){
-  $("#title").textContent = "Letter templates";
-  const used = usedLangs();
-  const order = Object.values(S.templates).sort((a,b) => (used.has(b.lang.toLowerCase()) - used.has(a.lang.toLowerCase())) || a.row - b.row);
-  $("#page").innerHTML = `<p class="muted" style="margin-top:0">A language can only be used once someone fluent has approved both the letter and the email wording. Editing the wording removes its approval.</p>` +
-    order.map(t => {
-      const n = S.guests.filter(g => !g._excluded && g._lang.toLowerCase() === t.lang.toLowerCase()).length;
-      const k = t.lang.toLowerCase();
-      if (!t.body) return `<div class="card tcard"><div class="thead"><h3>${esc(t.lang)}</h3><span class="muted small">${n} guest(s)</span></div><p class="muted">${k==="arabic" ? "Arabic letters can't be made here yet (right-to-left script). Prepare them in Word for now." : "No wording yet."}</p>${k==="arabic" ? "" : `<button data-ed="${k}">Write ${esc(t.lang)} wording</button>`}</div>`;
-      if (tplEdit === k) return `<div class="card tcard"><div class="thead"><h3>Edit ${esc(t.lang)}</h3></div>
-        <div class="form" style="margin-top:10px">
-          <label>Letter date<input type="text" data-f="Letter Date" value="${esc(t.date)}"></label><label>Closing<input type="text" data-f="Closing" value="${esc(t.closing)}"></label>
-          <label class="full">Letter heading<input type="text" data-f="Letter Heading" value="${esc(t.heading)}"></label>
-          <label class="full">Letter body (blank line between paragraphs; **text** for bold)<textarea data-f="Letter Body" rows="12">${esc(t.body)}</textarea></label>
-          <label class="full">Email subject<input type="text" data-f="Email Subject" value="${esc(t.subject)}"></label>
-          <label class="full">Email note ({greeting} is replaced by the guest's greeting)<textarea data-f="Email Note" rows="8">${esc(t.note)}</textarea></label></div>
-        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px"><button id="tc">Cancel</button><button class="primary" id="ts">Save wording</button></div></div>`;
-      return `<div class="card tcard"><div class="thead"><h3>${esc(t.lang)}</h3><span class="muted small">${n} guest(s) · letter date ${esc(t.date)}</span><div style="flex:1"></div>
-          <span class="${t.letterOk?"ok":"no"}">Letter: ${t.letterOk?`approved by ${esc(t.letterOk)}`:"not approved"}</span>
-          <span class="${t.emailOk?"ok":"no"}">Email: ${t.emailOk?`approved by ${esc(t.emailOk)}`:"not approved"}</span></div>
-        <div class="two" style="margin-top:12px"><div><div class="small muted">Email subject</div><div style="margin-bottom:8px">${esc(t.subject)}</div><div class="mail" style="max-height:240px;overflow:auto">${esc(t.note)}</div></div>
-          <div><div class="small muted">Letter heading</div><div style="font-weight:600;text-decoration:underline;margin-bottom:6px">${esc(t.heading)}</div><div class="mail" style="max-height:240px;overflow:auto">${esc(t.body.replace(/\*\*/g,""))}</div></div></div>
-        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button data-pv="${k}">Preview letter</button><button data-ed="${k}">Edit wording</button><div style="flex:1"></div>
-          ${t.letterOk && t.emailOk ? "" : `<button class="primary" data-ap="${k}">Approve ${esc(t.lang)} letter and email</button>`}</div></div>`;
-    }).join("");
-  document.querySelectorAll("[data-ed]").forEach(b => b.onclick = () => { tplEdit = b.dataset.ed; pageTemplates(); });
-  document.querySelectorAll("[data-ap]").forEach(b => b.onclick = () => approveTpl(S.templates[b.dataset.ap]));
-  document.querySelectorAll("[data-pv]").forEach(b => b.onclick = () => previewTpl(S.templates[b.dataset.pv]));
-  if ($("#tc")) $("#tc").onclick = () => { tplEdit = null; pageTemplates(); };
-  if ($("#ts")) $("#ts").onclick = () => {
-    if (!needName()) return;
-    const t = S.templates[tplEdit], map = {"Letter Date":"date","Letter Heading":"heading","Letter Body":"body","Closing":"closing","Email Subject":"subject","Email Note":"note"};
-    const th = sheetRows("Templates")[0].map(clean); let changed = false;
-    document.querySelectorAll("[data-f]").forEach(el => { const f = el.dataset.f, val = el.tagName === "TEXTAREA" ? el.value.replace(/\r/g,"").trim() : clean(el.value);
-      if (t[map[f]] !== val) { t[map[f]] = val; setCell("Templates", t.row, th.indexOf(f), val); changed = true; } });
-    if (changed) { t.letterOk = ""; t.emailOk = ""; setCell("Templates", t.row, S.tcol.letterOk, ""); setCell("Templates", t.row, S.tcol.emailOk, ""); log(`Template edited (${t.lang})`, null, "", "approval removed"); evaluateAll(); autoSave(); }
-    tplEdit = null; pageTemplates();
-  };
-}
-function approveTpl(t){
-  if (!needName()) return;
-  showModal(`Approve the ${esc(t.lang)} wording?`, `<p>You confirm you have read the ${esc(t.lang)} letter and covering email in full, and that they are correct and ready to send.</p>`,
-    [["Cancel",null],[`Approve as ${esc(who())}`, () => { t.letterOk = who(); t.emailOk = who(); setCell("Templates", t.row, S.tcol.letterOk, who()); setCell("Templates", t.row, S.tcol.emailOk, who()); log(`Template approved (${t.lang})`, null); evaluateAll(); autoSave(); pageTemplates(); }, true]]);
-}
-async function previewTpl(t){
-  const sample = S.guests.find(g => g._canBuild && g._lang.toLowerCase() === t.lang.toLowerCase()) ||
-    { ID:"SAMPLE", Title:"Dr.", "First Name":"Amina", Surname:"Example", Position:"Managing Director", Organisation:"Example Bank Plc", Country:"Ghana", "Salutation Override":"", _lang:t.lang, _title:"Dr." };
-  const s = Object.assign({}, sample, { _lang: t.lang });
-  if (!s._title) s._title = s.Title;
-  let bytes; try { bytes = await buildPdf(s); } catch(e) { return showModal("Can't preview", `<p>${esc(e.message)}</p>`, [["OK",null,true]]); }
-  if (previewUrl) URL.revokeObjectURL(previewUrl);
-  previewUrl = URL.createObjectURL(new Blob([bytes], {type:"application/pdf"}));
-  showModal(`${esc(t.lang)} letter preview`, `<p class="small muted">Shown for ${esc(s["First Name"]+" "+s.Surname)}.</p><iframe src="${previewUrl}#toolbar=0&view=FitH" style="height:560px"></iframe>`, [["Close",null,true]]);
-  $("#modal").style.maxWidth = "820px";
-}
-
-/* ---------- log / event / soon ---------- */
-function pageLog(){
-  $("#title").textContent = "Activity log";
-  const rows = sheetRows("Send Log").slice(1).filter(r => r.some(v => clean(v)));
-  const all = [...rows.map(r => r.map(clean)), ...S.newLog].reverse();
-  $("#page").innerHTML = `<p class="muted" style="margin-top:0">Every approval, draft, send and edit, with who and when. Also kept in the workbook's Send Log sheet.</p>
-    <div class="tablebox"><table><thead><tr><th>When</th><th>Action</th><th>Guest</th><th>Email</th><th>File</th><th>By</th><th>Note</th></tr></thead><tbody>${all.map(r => `<tr><td class="small">${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[3])}</td><td class="small">${esc(r[4])}</td><td class="small">${esc(r[5])}</td><td>${esc(r[6])}</td><td class="small">${esc(r[7])}</td></tr>`).join("") || `<tr><td colspan="7" class="muted" style="padding:20px">Nothing yet.</td></tr>`}</tbody></table></div>`;
-}
-function pageEvent(){
-  $("#title").textContent = "Event details";
-  $("#page").innerHTML = `<div class="card"><div class="kv" style="grid-template-columns:220px 1fr">${Object.entries(S.brief).map(([k,v]) => `<div>${esc(k)}</div><div style="white-space:pre-wrap">${esc(v)}</div>`).join("")}</div>
-    <p class="small muted">These details live in the workbook's Event Brief sheet. The signatory block is printed under the signature on every letter.</p></div>
-    <div class="card" style="margin-top:14px"><h3 class="h">Signature on the letters</h3>
-    ${SIG_BUILTIN ? `<p>This copy of the Hub has the signature built in.</p>` :
-      `<p class="muted">For safety, the signature is not stored in the site. Load the signature image (PNG or JPG) once on this computer; it is remembered in this browser only.</p>
-      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${IMG.sig ? `<img alt="Signature" style="height:46px;border:1px solid var(--line);border-radius:6px;padding:4px;background:#fff" src="data:image/${IMG.sigType==="png"?"png":"jpeg"};base64,${bytesToB64(IMG.sig)}">` : `<span class="no">No signature loaded on this computer</span>`}
-      <label class="fchip" style="cursor:pointer">${IMG.sig ? "Replace" : "Load"} signature image<input type="file" id="sigFile" accept="image/png,image/jpeg" class="hide"></label>${IMG.sig ? `<button id="sigDel">Remove</button>` : ""}</div>`}</div>`;
-  const sf = $("#sigFile");
-  if (sf) sf.onchange = async e => { const f = e.target.files[0]; if (!f) return; const b = new Uint8Array(await f.arrayBuffer()); IMG.sig = b; IMG.sigType = /png/i.test(f.type) ? "png" : "jpg";
-    try { localStorage.setItem("awepHubSignature", `data:image/${IMG.sigType==="png"?"png":"jpeg"};base64,${bytesToB64(b)}`); } catch(_){ toast("Loaded for this session only (browser storage unavailable)"); }
-    pageEvent(); toast("Signature loaded"); };
-  if ($("#sigDel")) $("#sigDel").onclick = () => { IMG.sig = null; try { localStorage.removeItem("awepHubSignature"); } catch(_){} pageEvent(); };
-}
-function pageSoon([k,l,i,d]){
-  $("#title").textContent = l;
-  $("#page").innerHTML = `<div class="card soonbox"><span class="chip c-approval">Planned · Phase 2</span><h3 class="h" style="margin-top:10px">${esc(l)}</h3><p>${esc(d)}</p><p class="muted small">This section will be added to the Hub once the invitation flow is in use. It will work from the same event workbook.</p></div>`;
-}
-
-/* ---------- modal helpers ---------- */
-function showModal(title, body, buttons){
-  $("#modal").style.maxWidth = "";
-  $("#modal").innerHTML = `<h3>${title}</h3>${body}<div class="actions">${buttons.map((b,i)=>`<button data-i="${i}" class="${b[2]?"primary":""}">${b[0]}</button>`).join("")}</div>`;
-  $("#modalBack").classList.add("show");
-  $("#modal").querySelectorAll(".actions button").forEach(btn => btn.onclick = async () => { const fn = buttons[+btn.dataset.i][1]; closeModal(); if (fn) await fn(); });
-}
-function closeModal(){ $("#modalBack").classList.remove("show"); }
-function confirmModal(title, body, yes){ return new Promise(res => showModal(title, body, [["Cancel", () => res(false)], [yes, () => res(true), true]])); }
-
 /* ================== New event + Add guests (import list / pick from contact list) ================== */
 const GROUPS = ["Central bank / regulator","DFI / investor","Commercial bank","Women-led bank / MFI","Women entrepreneurs / association","Cooperative / savings group","Fintech","Government","Diplomatic mission","UN / multilateral","Development partner / foundation","Civil society","Academia / think tank","Media","Private sector","Youth","Speaker"];
 
@@ -1582,150 +1002,833 @@ function commitAdd(){
     }, true]]);
 }
 
-/* ================== Review & approve (one guest at a time) + guidance ================== */
-const RVFIELDS = [["Title","Title"],["First Name","First name"],["Surname","Surname"],["Position","Position / job title",1],["Organisation","Organisation",1],["Country","Country"],["Email","Email"],["CC Emails","Also copy (CC) — optional, separate with ;",1],["Letter Language","Letter language",0,["English","French","Portuguese","Spanish","Kiswahili","Arabic"]],["Salutation Override","Special greeting — leave blank to use the usual one",1]];
-let RV = { filter: "todo", id: null, tab: "letter", timer: null, url: null };
-function rvQueue(){
-  return S.guests.filter(g => RV.filter === "fix" ? g._status === "blocked" : RV.filter === "ok" ? g._status === "approval" : (g._status === "blocked" || g._status === "approval"));
+</script>
+<script>
+"use strict";
+/* ================= AWEP Events Hub — app shell (v3) ================= */
+const ICONS = {
+  home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  book:'<path d="M4 4h11a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M4 17a3 3 0 0 1 3-3h11"/>',
+  plus:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+  open:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  over:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  guests:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M16 14.6c2.6.2 4.6 1.9 5.3 5.4"/>',
+  send:'<path d="M21 3L10 14"/><path d="M21 3l-7 18-4-7-7-4z"/>',
+  letter:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+  addp:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M19 8v6M16 11h6"/>',
+  rsvp:'<path d="M4 12l5 5L20 6"/>', docs:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M13 10h5M13 14h4"/>',
+  follow:'<path d="M4 4h16v12H8l-4 4z"/>', report:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  log:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', event:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'
+};
+const ico = k => `<svg class="ico" viewBox="0 0 24 24">${ICONS[k]}</svg>`;
+const EVENT_PAGES = [
+  ["overview","Overview","over"],["guests","Guest list","guests"],["send","Approve & send","send"],["letter","Letter","letter"],["add","Add guests","addp"],
+  ["rsvp","RSVP","rsvp",1],["eventdocs","Event-day documents","docs",1],["followup","Follow-up","follow",1],["reports","Reports & posts","report",1],
+  ["activity","Activity","log"],["details","Event details","event"]
+];
+const SOON = {
+  rsvp:["RSVP","A personal RSVP link in every invitation, with answers flowing into the guest list automatically; dietary, access, travel and accommodation needs; manual updates for people who reply by email."],
+  eventdocs:["Event-day documents","Name badges and table tents, a seating plan in protocol order, sign-in sheets and a door check-in screen, and the programme / run of show."],
+  followup:["Follow-up","Reminder emails a week and a day before (only to people who accepted), thank-you letters to attendees, speakers and co-hosts, and participation certificates."],
+  reports:["Reports & posts","Event report draft (invited vs attended by country, sector, gender), donor reporting, and LinkedIn / Instagram / TikTok post drafts with no emojis."]
+};
+const MAIL = {
+  "outlook-app": { label:"Outlook (the app on this computer)", short:"Outlook app", verb:"open email in Outlook" },
+  "outlook-web": { label:"Outlook in the browser (outlook.office.com)", short:"Outlook on the web", verb:"open email in Outlook on the web" },
+  "gmail": { label:"Gmail in the browser", short:"Gmail", verb:"open email in Gmail" },
+  "other": { label:"Something else", short:"other email", verb:"get the email to copy" }
+};
+const STATUS = { blocked:["Needs fixing","c-blocked",1], approval:["To approve","c-approval",2], ready:["Approved — send it","c-ready",3], drafted:["Email opened — mark sent","c-drafted",4], sent:["Sent","c-sent",5], excluded:["Not inviting","c-excluded",6] };
+let route = "home", RECENT = [], gFilter = "all", gSearch = "", PS = { filter:"todo", id:null, tab:"letter", timer:null, url:null }, CT = null;
+const PREF = { get(k){ try { return localStorage.getItem(k) || ""; } catch(e){ return ""; } }, set(k,v){ try { localStorage.setItem(k,v); } catch(e){} } };
+function who(){ return PREF.get("awepHubName"); }
+function mailApp(){ return PREF.get("awepHubMail") || "outlook-app"; }
+function needName(){ if (who() && PREF.get("awepHubMail")) return true; setup(); return false; }
+function toast(msg, ms){ const t = $("#toast"); t.innerHTML = msg; t.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), ms || 3500); }
+$("#logo").src = "data:image/png;base64," + ASSETS.logo;
+const SIG_BUILTIN = !!ASSETS.sig;
+try { const s = localStorage.getItem("awepHubSignature"); if (s && !SIG_BUILTIN) { const m = s.match(/^data:image\/(png|jpe?g);base64,(.+)$/); if (m) { IMG.sig = b64ToBytes(m[2]); IMG.sigType = m[1] === "png" ? "png" : "jpg"; } } } catch(e){}
+
+/* ---------- small storage for the list of events and the contact list ---------- */
+const IDB = {
+  db: null,
+  open(){ if (this.db) return Promise.resolve(this.db); return new Promise((res, rej) => { try { const r = indexedDB.open("awepHub", 1);
+    r.onupgradeneeded = () => { r.result.createObjectStore("events", {keyPath:"key"}); r.result.createObjectStore("files", {keyPath:"key"}); };
+    r.onsuccess = () => res(this.db = r.result); r.onerror = () => rej(r.error); } catch(e) { rej(e); } }); },
+  async tx(store, mode, fn){ const db = await this.open(); return new Promise((res, rej) => { const t = db.transaction(store, mode); const st = t.objectStore(store); const out = fn(st); t.oncomplete = () => res(out && out.result !== undefined ? out.result : out); t.onerror = () => rej(t.error); }); },
+  async put(store, v){ try { await this.tx(store, "readwrite", s => s.put(v)); } catch(e) { try { const c = Object.assign({}, v); delete c.handle; await this.tx(store, "readwrite", s => s.put(c)); } catch(_){} } },
+  async all(store){ try { return await this.tx(store, "readonly", s => s.getAll()) || []; } catch(e) { return []; } },
+  async get(store, key){ try { return await this.tx(store, "readonly", s => s.get(key)); } catch(e) { return null; } },
+  async del(store, key){ try { await this.tx(store, "readwrite", s => s.delete(key)); } catch(e){} }
+};
+async function loadRecent(){ RECENT = (await IDB.all("events")).sort((a,b) => (b.opened||0) - (a.opened||0)); }
+function evKey(){ return S ? `${S.code}|${S.fileName}` : ""; }
+async function rememberEvent(){
+  if (!S) return;
+  const c = counts();
+  const rec = { key: evKey(), name: S.brief["Event name"] || S.fileName, date: S.brief["Event date"] || "", city: S.brief["City / venue"] || "", file: S.fileName, opened: Date.now(),
+    stats: { guests: c.all - c.excluded, todo: c.blocked + c.approval + c.ready + c.drafted, sent: c.sent } };
+  if (S.handle) rec.handle = S.handle;
+  await IDB.put("events", rec); const had = RECENT.some(r => r.key === rec.key); await loadRecent(); if (!had) renderNav();
+}
+async function openRecent(key){
+  if (S && evKey() === key) return go("overview");
+  if (S && S.dirty && !(await confirmModal("Unsaved changes", "<p>The open event has changes that aren't saved yet. Switch anyway?</p>", "Switch"))) return;
+  const rec = RECENT.find(r => r.key === key);
+  if (rec && rec.handle && rec.handle.requestPermission) {
+    try { let p = await rec.handle.queryPermission({mode:"readwrite"}); if (p !== "granted") p = await rec.handle.requestPermission({mode:"readwrite"});
+      if (p === "granted") return loadFile(await rec.handle.getFile(), rec.handle); } catch(e) {}
+  }
+  showModal(`Open "${esc(rec ? rec.name : "the event")}"`, `<p>Choose this event's file: <b>${esc(rec ? rec.file : "")}</b>. It's usually in your team's shared folder.</p>`, [["Cancel",null],["Choose file", openWorkbook, true]]);
+}
+
+/* ---------- first-time setup: name + email app ---------- */
+function setup(){
+  const cur = PREF.get("awepHubMail");
+  showModal("Welcome! Two quick questions", `<p>These are remembered on this computer.</p>
+    <label class="small muted">1. Your name (recorded against what you approve and send)<input type="text" id="suName" value="${esc(who())}" style="width:100%;margin-top:4px" placeholder="e.g. Danita"></label>
+    <p class="small muted" style="margin:14px 0 4px">2. How do you send email from your AUDA-NEPAD address?</p>
+    ${Object.entries(MAIL).map(([k,m]) => `<label class="opt"><input type="radio" name="suMail" value="${k}" ${cur===k?"checked":""}><span><b>${m.label}</b><span class="small muted">${{
+      "outlook-app":"Each invitation opens as a ready email in Outlook, with the letter already attached. You just press Send.",
+      "outlook-web":"Each invitation opens as a new email in Outlook in your browser, filled in. The letter downloads: drag it into the email, then Send.",
+      "gmail":"Each invitation opens as a new Gmail email, filled in. The letter downloads: drag it into the email, then Send.",
+      "other":"You get the letter and the email text with Copy buttons, to paste into your email."}[k]}</span></span></label>`).join("")}`,
+    [["Save", () => {
+      const n = clean($("#suName").value), m = (document.querySelector('input[name="suMail"]:checked') || {}).value;
+      if (!n || !m) { setTimeout(() => { toast("Please type your name and choose how you send email"); setup(); }, 50); return; }
+      PREF.set("awepHubName", n); PREF.set("awepHubMail", m); renderMe(); draw();
+    }, true]]);
+}
+function renderMe(){
+  $("#me").innerHTML = who() ? `<span>You: <b>${esc(who())}</b> · ${esc(MAIL[mailApp()].short)}</span><a id="meChange">change</a>` : `<a id="meChange">Set your name and email app</a>`;
+  $("#meChange").onclick = setup;
+}
+
+/* ---------- navigation ---------- */
+function counts(){ const c = {all:0,blocked:0,approval:0,ready:0,drafted:0,sent:0,excluded:0}; if (S) for (const g of S.guests) { c.all++; c[g._status]++; } return c; }
+function isEventRoute(r){ return EVENT_PAGES.some(p => p[0] === r); }
+function renderNav(){
+  const c = counts();
+  const badge = { guests: c.all - c.excluded, send: c.blocked + c.approval + c.ready + c.drafted };
+  const evs = [...RECENT];
+  if (S && !evs.find(r => r.key === evKey())) evs.unshift({ key: evKey(), name: S.brief["Event name"] || S.fileName, date: S.brief["Event date"] || "", city: S.brief["City / venue"] || "" });
+  $("#nav").innerHTML =
+    `<a data-r="home" class="${route==="home"?"on":""}">${ico("home")}Home</a>
+     <a data-r="contacts" class="${route==="contacts"?"on":""}">${ico("book")}Contact list</a>
+     <a data-r="newevent" class="${route==="newevent"?"on":""}">${ico("plus")}New event</a>
+     <div class="sec">Your events</div>` +
+    (evs.length ? evs.slice(0, 8).map(r => {
+      const cur = S && r.key === evKey();
+      return `<div class="ev ${cur?"cur":""}"><a class="evh" data-ev="${esc(r.key)}"><b>${esc(r.name)}</b><span>${esc([r.date, r.city].filter(Boolean).join(" · "))}</span></a>` +
+        (cur ? `<div class="sub">${EVENT_PAGES.map(([k,l,i,soon]) => `<a data-r="${k}" class="${route===k?"on":""} ${soon?"dim":""}">${ico(i)}${l}${soon?`<span class="soon">Soon</span>`:badge[k]?`<span class="n">${badge[k]}</span>`:""}</a>`).join("")}</div>` : "") + `</div>`;
+    }).join("") : `<p class="small muted" style="padding:0 11px">No events yet.</p>`) +
+    `<a data-open="1">${ico("open")}Open an event file…</a>`;
+  document.querySelectorAll("#nav [data-r]").forEach(a => a.onclick = () => go(a.dataset.r));
+  document.querySelectorAll("#nav [data-ev]").forEach(a => a.onclick = () => openRecent(a.dataset.ev));
+  document.querySelector("#nav [data-open]").onclick = openWorkbook;
+}
+window.addEventListener("hashchange", () => { const r = location.hash.slice(1) || "home"; route = (isEventRoute(r) && !S) ? "home" : r; draw(); });
+function go(r, opts){ if (opts && opts.filter) gFilter = opts.filter; if (isEventRoute(r) && !S) r = "home"; route = r; if (location.hash !== "#" + r) location.hash = r; else draw(); }
+$("#brand").onclick = () => go("home");
+const HELPTXT = {
+  home: ["Home shows your events.", "Click an event to work on it. Each event has its own guest list, letter and sending. Start a new one with <b>New event</b>, or search the AWEP contact list under <b>Contact list</b>."],
+  contacts: ["Search the AWEP master contact list.", "Upload it once, type words such as <i>bank, finance, embassy</i>, untick anyone you don't want, then <b>Download as Excel</b> (the contact list for an event) or <b>Add to an event</b>."],
+  newevent: ["Create an event in a few minutes.", "Answer the questions, upload your drafted letter (Word) or type it, and the Hub creates the event's file. Keep that file in the team's shared folder."],
+  overview: ["Where this event stands.", "Work down the steps: each button takes you to the right page."],
+  guests: ["Everyone invited to this event.", "Click any box to correct a name, email or language: it saves by itself. Click <b>Open</b> on a row to see that person's letter and to approve and send it."],
+  send: ["Approve and send, one person at a time.", "Correct anything on the left; the letter on the right updates as you type. <b>Approve & open email</b> confirms the letter is right and opens the email for you to send. Then click <b>I've sent it</b>."],
+  letter: ["The letter and covering email for this event.", "Upload the letter you drafted in Word, or edit the text here. Someone who speaks the language must click <b>Approve</b> before any letter in that language can go."],
+  add: ["Bring people into this event.", "Import a guest list, or pick from the contact list. Nothing is sent from here."],
+  activity: ["Everything that happened, with who and when."],
+  details: ["The event's details, as entered when it was created."]
+};
+$("#btnHelp").onclick = () => { const h = HELPTXT[route] || ["About this page", (SOON[route] || [])[1] || ""]; showModal(esc(h[0].replace(/\.$/,"")), `<p>${h.slice(1).join("</p><p>")}</p><p class="small muted">How the Hub works overall: create an event → add guests → approve & send. Nothing is ever sent without you pressing Send in your own email.</p>`, [["Got it", null, true]]); };
+
+function head(crumb, title, sub){
+  $("#crumb").innerHTML = crumb; $("#title").textContent = title; $("#sub").innerHTML = sub || ""; $("#topActions").innerHTML = "";
+  const ca = document.querySelector("#crumb a"); if (ca) ca.onclick = () => go(ca.dataset.go || "home");
+}
+function evCrumb(){ return `<a data-go="overview">${esc(S.brief["Event name"] || "Event")}</a>`; }
+function draw(){
+  renderNav(); renderMe(); renderSave();
+  if (SOON[route]) return pageSoon(route);
+  ({ home:pageHome, contacts:pageContacts, newevent:pageNewEvent, overview:pageOverview, guests:pageGuests, send:pageSend, letter:pageLetter, add:pageAddWrap, activity:pageActivity, details:pageDetails }[route] || pageHome)();
+}
+
+/* ---------- open / save ---------- */
+const FSA = !!window.showOpenFilePicker;
+async function openWorkbook(){
+  if (FSA) {
+    try { const [h] = await window.showOpenFilePicker({types:[{description:"Event file (Excel)", accept:{"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":[".xlsx"]}}]});
+      let perm = "denied"; try { perm = await h.requestPermission({mode:"readwrite"}); } catch(e){}
+      await loadFile(await h.getFile(), perm === "granted" ? h : null); }
+    catch(e) { if (e && e.name !== "AbortError") $("#file").click(); }
+  } else $("#file").click();
+}
+$("#file").addEventListener("change", e => { if (e.target.files[0]) loadFile(e.target.files[0], null); e.target.value = ""; });
+$("#btnSave").onclick = () => saveNow(true);
+window.addEventListener("beforeunload", e => { if (S && S.dirty) { e.preventDefault(); e.returnValue = ""; } });
+function onLoaded(){ lastZip = null; gFilter = "all"; gSearch = ""; PS.id = null; rememberEvent(); go("overview"); toast(`Opened <b>${esc(S.brief["Event name"] || S.fileName)}</b>`); if (pending.length) autoSave(); }
+function renderSave(){
+  const el = $("#saveState"); el.className = "";
+  $("#btnSave").classList.toggle("hide", !S || (S.handle && !S.saveError && !S.dirty));
+  if (!S) { $("#saveText").textContent = "No event open"; return; }
+  if (S.saveError) { el.className = "err"; $("#saveText").textContent = S.saveError; }
+  else if (S.dirty) { el.className = "dirty"; $("#saveText").textContent = S.handle ? "Saving…" : "Changes not saved yet"; }
+  else { el.className = "ok"; $("#saveText").textContent = S.savedAt ? `All changes saved (${S.savedAt})` : (S.handle ? "Changes save automatically" : "Opened"); }
+}
+let saving = null, saveTimer = null;
+function updateBadges(){
+  const c = counts(), vals = { guests: c.all - c.excluded, send: c.blocked + c.approval + c.ready + c.drafted };
+  for (const [k, v] of Object.entries(vals)) { const a = document.querySelector(`#nav [data-r="${k}"]`); if (!a) continue; let n = a.querySelector(".n");
+    if (!v) { if (n) n.remove(); continue; } if (!n) { n = document.createElement("span"); n.className = "n"; a.appendChild(n); } n.textContent = v; }
+}
+let remTimer = null;
+function autoSave(){ updateBadges(); renderSave(); clearTimeout(remTimer); remTimer = setTimeout(rememberEvent, 1500); clearTimeout(saveTimer); if (S && S.handle) saveTimer = setTimeout(() => saveNow(false), 600); }
+async function saveNow(manual){
+  if (!S) return false;
+  if (saving) { await saving; if (!S.dirty) return true; }
+  saving = (async () => {
+    const blob = await workbookBlob();
+    if (S.handle) {
+      try {
+        const f = await S.handle.getFile();
+        if (S.mtime && f.lastModified !== S.mtime) {
+          S.saveError = "Not saved: someone else changed the file"; renderSave();
+          showModal("Someone else changed this event's file", `<p>A newer version of <b>${esc(S.fileName)}</b> was saved after you opened it (by a colleague, or by OneDrive/SharePoint sync). To avoid overwriting their work, your changes weren't saved into it.</p><p>Click <b>Keep my changes as a copy</b>, then re-open the shared file and redo them there.</p>`,
+            [["Close",null],["Keep my changes as a copy", () => download(blob, S.fileName.replace(/\.xlsx$/i," (my changes).xlsx")), true]]);
+          return false;
+        }
+        const w = await S.handle.createWritable(); await w.write(blob); await w.close();
+        S.mtime = (await S.handle.getFile()).lastModified; S.dirty = false; S.saveError = ""; S.savedAt = nowStamp().slice(11);
+        rememberEvent(); return true;
+      } catch(e) { S.saveError = "Couldn't save: close the file in Excel, then click Save"; return false; }
+    }
+    if (!(await download(blob, S.fileName))) { S.saveError = "Not saved: the download was cancelled"; return false; }
+    S.dirty = false; S.saveError = ""; S.savedAt = nowStamp().slice(11); rememberEvent();
+    if (manual) showModal("Saved as a download", `<p>This browser can't save into the original file, so the updated file was downloaded as <b>${esc(S.fileName)}</b>. Replace the shared copy with it.</p><p class="small muted">In Microsoft Edge or Google Chrome the Hub saves straight into the file.</p>`, [["OK",null,true]]);
+    return true;
+  })();
+  const r = await saving; saving = null; renderSave(); return r;
+}
+
+/* ---------- HOME ---------- */
+function pageHome(){
+  head("", who() ? `Welcome, ${who()}` : "Welcome", "Choose an event to work on, or start a new one.");
+  const evs = RECENT;
+  $("#page").innerHTML = `<div class="cards">
+      ${evs.map(r => `<div class="evcard" data-ev="${esc(r.key)}"><b>${esc(r.name)}</b><div class="meta">${esc([r.date, r.city].filter(Boolean).join(" · "))}</div>
+        ${r.stats ? `<div class="stats"><span><b>${r.stats.guests}</b>guests</span><span><b>${r.stats.todo}</b>to do</span><span><b>${r.stats.sent}</b>sent</span></div>` : ""}</div>`).join("")}
+      <div class="evcard new" id="hNew"><span class="plus">+</span><b>New event</b><span class="meta">Takes a few minutes</span></div>
+      <div class="evcard new" id="hOpen"><span class="plus">${ico("open")}</span><b>Open an event file</b><span class="meta">From your shared folder</span></div>
+    </div>
+    <div class="card" style="margin-top:16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:240px"><h3 class="h" style="margin:0">Contact list</h3><div class="muted">Search the AWEP master contact list by words (for example <i>bank, finance</i>) and export the matches to Excel for an event.</div></div><button class="primary" id="hCt">Open contact list</button></div>
+    <div class="howto"><div><b>1 · Create the event</b>Answer a few questions and upload your drafted letter.</div><div><b>2 · Add guests</b>Import a guest list or search the contact list.</div><div><b>3 · Approve & send</b>Check each letter, approve, and the email opens ready to send.</div><div><b>4 · Mark as sent</b>So nobody is ever invited twice.</div></div>`;
+  document.querySelectorAll(".evcard[data-ev]").forEach(el => el.onclick = () => openRecent(el.dataset.ev));
+  $("#hNew").onclick = () => go("newevent"); $("#hOpen").onclick = openWorkbook; $("#hCt").onclick = () => go("contacts");
+}
+
+/* ---------- EVENT OVERVIEW ---------- */
+function pageOverview(){
+  head(`<a data-go="home">Home</a> ›`, S.brief["Event name"] || "Event", [S.brief["Event date"], S.brief["City / venue"]].filter(Boolean).map(esc).join(" · "));
+  const c = counts(), langs = usedLangs();
+  const unTpl = [...langs].map(l => S.templates[l]).filter(t => t && t.body && (!t.letterOk || !t.emailOk));
+  const noTpl = [...langs].filter(l => !S.templates[l] || !S.templates[l].body);
+  const letterOk = !unTpl.length && !noTpl.length && langs.size > 0;
+  const guests = c.all - c.excluded, todo = c.blocked + c.approval + c.ready + c.drafted;
+  const steps = [
+    ["Letter", letterOk ? "Letter written and approved." : noTpl.length ? `Upload or write the ${noTpl.join(", ")} letter.` : unTpl.length ? `The ${unTpl.map(t=>t.lang).join(", ")} letter needs approving.` : "Upload or write the letter.", "letter", letterOk ? "View" : "Open letter", letterOk],
+    ["Guests", guests ? `${guests} people on the list.` : "No guests yet.", guests ? "guests" : "add", guests ? "View list" : "Add guests", guests > 0],
+    ["Approve & send", todo ? `${todo} to do: ${c.blocked} need fixing, ${c.approval} to approve, ${c.ready} to send, ${c.drafted} to mark sent.` : guests ? "Nobody waiting." : "Add guests first.", "send", "Start", guests > 0 && !todo],
+    ["Sent", `${c.sent} sent so far${c.excluded ? ` · ${c.excluded} not being invited` : ""}.`, "guests", "View", false]
+  ];
+  const nowIdx = steps.findIndex(s => !s[4]);
+  $("#page").innerHTML = `<div class="steps">${steps.map(([t,p,r,b,done],i) => `<div class="stp ${done?"done":i===nowIdx?"now":""}"><div class="num">${done?"✓":i+1}</div><div><h4>${t}</h4><p>${esc(p)}</p></div><button class="${i===nowIdx?"primary":""}" data-go="${r}">${b}</button></div>`).join("")}</div>
+    ${!IMG.sig ? `<div class="note">The signature for the letters isn't loaded on this computer yet. <button class="small" id="ovSig">Load it under Letter</button></div>` : ""}`;
+  document.querySelectorAll("[data-go]").forEach(b => b.onclick = () => go(b.dataset.go));
+  if ($("#ovSig")) $("#ovSig").onclick = () => go("letter");
+}
+function usedLangs(){ return new Set(S.guests.filter(g => !g._excluded && !g["Sent On"]).map(g => g._lang.toLowerCase())); }
+
+/* ---------- GUEST LIST (edit in place) ---------- */
+const GCOLS = [["Title",80],["First Name",130],["Surname",140],["Organisation",230],["Email",230],["Letter Language",110]];
+function pageGuests(){
+  head(`${evCrumb()} ›`, "Guest list", "Click any box to correct it. Changes save by themselves.");
+  $("#topActions").innerHTML = `<button id="gAdd">+ Add a person</button> <button class="primary" id="gImp">Import a list</button>`;
+  $("#gAdd").onclick = addPerson; $("#gImp").onclick = () => go("add");
+  const c = counts();
+  $("#page").innerHTML = `<div class="toolbar">
+      <input type="text" id="gq" placeholder="Search names, organisations, emails…" style="width:300px" value="${esc(gSearch)}">
+      <select id="gf">${[["all",`Everyone (${c.all - c.excluded})`],["blocked",`Needs fixing (${c.blocked})`],["approval",`To approve (${c.approval})`],["ready",`Approved — to send (${c.ready})`],["drafted",`Email opened — to mark sent (${c.drafted})`],["sent",`Sent (${c.sent})`],["excluded",`Not inviting (${c.excluded})`]].map(([v,l]) => `<option value="${v}" ${gFilter===v?"selected":""}>${l}</option>`).join("")}</select>
+      <div class="spacer"></div><span class="small muted"><span class="dot r"></span>needs fixing <span class="dot a" style="margin-left:8px"></span>check <span class="dot g" style="margin-left:8px"></span>fine</span></div>
+    <div class="tablebox"><table><thead><tr><th>Status</th>${GCOLS.map(([k,w]) => `<th style="min-width:${w}px">${k === "Letter Language" ? "Language" : k}</th>`).join("")}<th></th><th></th></tr></thead><tbody id="gRows"></tbody></table></div><datalist id="titles">${[...new Set(S.rules.map(r => r.written))].map(t => `<option value="${esc(t)}">`).join("")}</datalist>`;
+  $("#gq").oninput = e => { gSearch = e.target.value; drawGuestRows(); };
+  $("#gf").onchange = e => { gFilter = e.target.value; drawGuestRows(); };
+  drawGuestRows();
+}
+function guestVisible(){
+  const q = gSearch.toLowerCase();
+  return S.guests.filter(g => (gFilter === "all" ? g._status !== "excluded" : g._status === gFilter) &&
+    (!q || [g.Title,g["First Name"],g.Surname,g.Organisation,g.Email,g.Country,g.Position].join(" ").toLowerCase().includes(q)));
+}
+function dotFor(g){ const b = g._issues.filter(i => i.level === "block").length, w = g._issues.filter(i => i.level === "warn").length; return b ? "r" : w ? "a" : "g"; }
+function drawGuestRows(){
+  const list = guestVisible();
+  $("#gRows").innerHTML = list.map(g => {
+    const [lbl, cls] = STATUS[g._status], locked = !!g["Sent On"];
+    const tipTxt = g._issues.filter(i => i.level !== "info").map(i => "• " + i.msg).join("\n") || "Everything looks right";
+    return `<tr data-id="${esc(g.ID)}"><td><span class="chip ${cls}">${lbl}</span></td>` +
+      GCOLS.map(([k]) => k === "Letter Language"
+        ? `<td><select class="cell" data-k="${k}" ${locked?"disabled":""}>${["English","French","Portuguese","Spanish","Kiswahili","Arabic"].map(o => `<option ${g._lang===o?"selected":""}>${o}</option>`).join("")}</select></td>`
+        : `<td><input class="cell ${(k==="Email"&&!g.Email)||(k==="Title"&&!g.Title)||(k==="Surname"&&!g.Surname)||(k==="Organisation"&&!g.Organisation)?"bad":""}" data-k="${k}" value="${esc(g[k])}" ${locked?"disabled":""} ${k==="Title"?'list="titles"':""}></td>`).join("") +
+      `<td title="${esc(tipTxt)}"><span class="dot ${dotFor(g)}"></span></td><td><button class="small" data-open="${esc(g.ID)}">Open</button></td></tr>`;
+  }).join("") || `<tr><td colspan="9" class="muted" style="padding:24px">Nobody here.</td></tr>`;
+  document.querySelectorAll("#gRows .cell").forEach(el => el.addEventListener("change", () => {
+    const g = S.guests.find(x => x.ID === el.closest("tr").dataset.id);
+    const v = clean(el.value);
+    if ((el.dataset.k === "Letter Language" ? g._lang : (g[el.dataset.k] || "")) === v) return;
+    if (!needName()) { el.value = el.dataset.k === "Letter Language" ? g._lang : (g[el.dataset.k] || ""); return; }
+    applyEdits(g, { [el.dataset.k]: v }); evaluateAll(); autoSave();
+    const tr = el.closest("tr"); const [lbl, cls] = STATUS[g._status];
+    tr.querySelector(".chip").className = "chip " + cls; tr.querySelector(".chip").textContent = lbl;
+    tr.querySelector(".dot").className = "dot " + dotFor(g);
+    el.classList.toggle("bad", !el.value && ["Email","Title","Surname","Organisation"].includes(el.dataset.k));
+    toast("Saved");
+  }));
+  document.querySelectorAll("[data-open]").forEach(b => b.onclick = () => { PS.id = b.dataset.open; PS.filter = "all"; go("send"); });
+}
+function applyEdits(g, vals){
+  const changed = Object.entries(vals).filter(([k,v]) => k === "Letter Language" ? v !== g._lang : (g[k] || "") !== v);
+  for (const [k,v] of changed) { g[k] = v; setCell("Invitees", g.row, k, v); }
+  if (!changed.length) return 0;
+  let note = changed.map(([k]) => k).join(", ");
+  if (g["Approved to Send By"] && !g["Draft Made On"]) { g["Approved to Send By"] = ""; g["Approved On"] = ""; setCell("Invitees", g.row, "Approved to Send By", ""); setCell("Invitees", g.row, "Approved On", ""); note += " (approval removed: check the letter again)"; }
+  if (changed.some(([k]) => k === "Letter Language") && g["Language Approved By"]) { g["Language Approved By"] = ""; setCell("Invitees", g.row, "Language Approved By", ""); }
+  log("Edited", g, "", note);
+  return changed.length;
+}
+function addPerson(){
+  if (!needName()) return;
+  const row = ++S.lastRow, used = new Set(S.guests.map(x => x.ID)); let n = S.guests.length + 1, id;
+  do { id = `${S.code}-${String(n++).padStart(4,"0")}`; } while (used.has(id));
+  const g = { row, ID: id }; for (const h of Object.keys(S.col)) g[h] = ""; g.ID = id; g.Source = "Added in the Hub"; g["Letter Language"] = S.defaultLang;
+  setCell("Invitees", row, "ID", id); setCell("Invitees", row, "Source", g.Source); setCell("Invitees", row, "Letter Language", g["Letter Language"]);
+  S.guests.push(g); evaluateAll(); log("Guest added", g); autoSave();
+  PS.id = id; PS.filter = "all"; go("send"); toast("New person added: fill in their details");
+}
+
+/* ---------- APPROVE & SEND (one person at a time) ---------- */
+const PSFIELDS = [["Title","Title"],["First Name","First name"],["Surname","Surname"],["Position","Position / job title",1],["Organisation","Organisation",1],["Country","Country"],["Email","Email"],["CC Emails","Also copy (CC) — optional",1],["Letter Language","Letter language",0,["English","French","Portuguese","Spanish","Kiswahili","Arabic"]],["Salutation Override","Special greeting — leave blank to use the usual one",1]];
+function psQueue(){
+  const f = PS.filter;
+  return S.guests.filter(g => f === "all" ? true : f === "todo" ? ["blocked","approval","ready","drafted"].includes(g._status) : g._status === f);
 }
 function tempGuest(g, vals){
-  const t = Object.assign({}, g, vals);
-  const cnt = {};
+  const t = Object.assign({}, g, vals); const cnt = {};
   for (const o of S.guests) { const x = o === g ? t : o; if (x.Email && !/^(y|yes|x|true)$/i.test(x["Do Not Invite"])) (cnt[x.Email.toLowerCase()] = cnt[x.Email.toLowerCase()] || []).push(x); }
-  evaluate(t, cnt);
-  return t;
+  evaluate(t, cnt); return t;
 }
-function pageReview(){
-  $("#title").textContent = "Review & approve";
-  const q = rvQueue(), all = S.guests.filter(g => g._status === "blocked" || g._status === "approval");
-  const nFix = all.filter(g => g._status === "blocked").length, nOk = all.length - nFix;
-  if (!q.find(g => g.ID === RV.id)) RV.id = q[0] ? q[0].ID : null;
-  const chips = `<div class="chips">${[["todo",`Everyone to review · ${all.length}`],["ok",`Ready to approve · ${nOk}`],["fix",`Needs fixing · ${nFix}`]].map(([k,l]) => `<span class="fchip ${RV.filter===k?"on":""}" data-rf="${k}">${l}</span>`).join("")}</div>`;
-  if (!RV.id) {
-    $("#page").innerHTML = chips + `<div class="card" style="text-align:center;padding:40px"><h3 class="h">Nothing left to review here</h3><p class="muted">${counts().ready ? `${counts().ready} approved guest(s) are waiting: go to <b>Send letters</b> to create their Outlook emails.` : "Add guests, or check the other filters above."}</p>${counts().ready ? `<button class="primary" onclick="go('send')">Go to Send letters</button>` : ""}</div>`;
-    bindRvChips(); return;
+function pageSend(){
+  head(`${evCrumb()} ›`, "Approve & send", "One person at a time: check, approve, send. Correct anything on the left; the letter on the right updates as you type.");
+  const c = counts();
+  const q = psQueue();
+  if (!q.find(g => g.ID === PS.id)) PS.id = q[0] ? q[0].ID : null;
+  const filt = `<select id="psF">${[["todo",`Everyone still to do (${c.blocked + c.approval + c.ready + c.drafted})`],["blocked",`Needs fixing (${c.blocked})`],["approval",`Ready to approve (${c.approval})`],["ready",`Approved — to send (${c.ready})`],["drafted",`Email opened — to mark sent (${c.drafted})`],["sent",`Sent (${c.sent})`],["excluded",`Not inviting (${c.excluded})`],["all",`Everyone (${c.all})`]].map(([v,l]) => `<option value="${v}" ${PS.filter===v?"selected":""}>${l}</option>`).join("")}</select>`;
+  if (!PS.id) {
+    $("#page").innerHTML = `<div class="psbar">${filt}</div><div class="card" style="text-align:center;padding:40px"><h3 class="h">Nobody here</h3><p class="muted">${c.all ? "Everyone in this view is done. Choose another view above." : "Add guests first."}</p>${c.all ? "" : `<button class="primary" onclick="go('add')">Add guests</button>`}</div>${bulkBox()}`;
+    $("#psF").onchange = e => { PS.filter = e.target.value; PS.id = null; pageSend(); }; bindBulk(); return;
   }
-  const g = S.guests.find(x => x.ID === RV.id), pos = q.indexOf(g);
-  const tpl = S.templates[g._lang.toLowerCase()], tplPending = tpl && tpl.body && (!tpl.letterOk || !tpl.emailOk);
-  $("#page").innerHTML = chips + `
-  <div class="rvbar"><button id="rvPrev" ${pos<=0?"disabled":""}>‹ Previous</button><span><b>${pos+1}</b> of ${q.length}</span><button id="rvNext" ${pos>=q.length-1?"disabled":""}>Next ›</button>
-    <select id="rvJump" style="max-width:280px">${q.map(x => `<option value="${esc(x.ID)}" ${x.ID===g.ID?"selected":""}>${esc(`${x["First Name"]} ${x.Surname}`.trim() || x.Organisation)}${x._status==="blocked"?" — needs fixing":""}</option>`).join("")}</select></div>
-  <div class="rv">
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:start;gap:8px"><div><h3 style="margin:0;color:var(--aub)" id="rvName"></h3><div class="small muted">${esc(g.Source || "")}${g["Source Link / Evidence"] ? " · " + esc(g["Source Link / Evidence"]).slice(0,90) : ""}</div></div><span id="rvChip"></span></div>
-      <ul class="issues" id="rvIssues"></ul>
-      ${tplPending ? `<div class="note">The ${esc(tpl.lang)} letter wording hasn't been approved yet, so no ${esc(tpl.lang)} guest can be approved. <button onclick="go('templates')">Read and approve it</button></div>` : ""}
-      <div class="form" id="rvForm">${RVFIELDS.map(([k,l,full,opts]) => `<label class="${full?"full":""}">${l}${opts ? `<select data-k="${k}">${opts.map(o => `<option ${g._lang===o?"selected":""}>${o}</option>`).join("")}</select>` : `<input type="text" data-k="${k}" value="${esc(g[k])}" ${k==="Title"?'list="rvTitles"':""}>`}</label>`).join("")}</div>
-      <datalist id="rvTitles">${[...new Set(S.rules.map(r => r.written))].map(t => `<option value="${esc(t)}">`).join("")}</datalist>
+  const g = S.guests.find(x => x.ID === PS.id), pos = q.indexOf(g), locked = !!g["Sent On"];
+  const tpl = S.templates[g._lang.toLowerCase()];
+  const app = MAIL[mailApp()];
+  $("#page").innerHTML = `<div class="psbar">${filt}<button id="psPrev" ${pos<=0?"disabled":""}>‹ Previous</button><span><b>${pos+1}</b> of ${q.length}</span><button id="psNext" ${pos>=q.length-1?"disabled":""}>Next ›</button>
+      <select id="psJump" style="max-width:300px">${q.map(x => `<option value="${esc(x.ID)}" ${x.ID===g.ID?"selected":""}>${esc(`${x["First Name"]} ${x.Surname}`.trim() || x.Organisation || "New person")}</option>`).join("")}</select></div>
+    <div class="ps"><div class="card">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:start"><div><h3 style="margin:0;color:var(--aub);font-size:19px" id="psName"></h3><div class="small muted">${esc(g.Organisation)}${g.Source ? " · from " + esc(g.Source) : ""}</div></div><span id="psChip"></span></div>
+      <div class="track" id="psTrack"></div>
+      <ul class="issues" id="psIssues"></ul>
+      ${tpl && tpl.body && (!tpl.letterOk || !tpl.emailOk) ? `<div class="note">The ${esc(tpl.lang)} letter hasn't been approved yet, so ${esc(tpl.lang)} invitations can't be approved. <button class="small" onclick="go('letter')">Read and approve the letter</button></div>` : ""}
+      <div class="form" id="psForm">${PSFIELDS.map(([k,l,full,opts]) => `<label class="${full?"full":""}">${l}${opts ? `<select data-k="${k}" ${locked?"disabled":""}>${opts.map(o => `<option ${g._lang===o?"selected":""}>${o}</option>`).join("")}</select>` : `<input type="text" data-k="${k}" value="${esc(g[k])}" ${k==="Title"?'list="psTitles"':""} ${locked?"disabled":""}>`}</label>`).join("")}</div>
+      <datalist id="psTitles">${[...new Set(S.rules.map(r => r.written))].map(t => `<option value="${esc(t)}">`).join("")}</datalist>
       ${g.Notes ? `<div class="small muted" style="margin-top:8px"><b>Notes:</b> ${esc(g.Notes)}</div>` : ""}
-      <div class="rvact">
-        <button class="primary big" id="rvApprove">✓ Approve &amp; next</button>
-        <button id="rvSave">Save changes &amp; next</button>
-        <button id="rvSkip">Skip for now</button>
-        <button id="rvNo" class="ghost">Don't invite this person</button>
-      </div>
-      <p class="hint"><b>Approve</b> = you've checked the letter and email on the right and this person should be invited. <b>Nothing is sent yet</b>: approved guests get their Outlook email in <b>Send letters</b>. Any changes you typed are saved too.</p>
+      <div class="actbox" id="psAct"></div>
     </div>
-    <div class="card"><div class="tabs" style="margin-top:0">${[["letter","Letter (exactly as it will look)"],["email","Email"]].map(([k,l]) => `<button data-t="${k}" class="${RV.tab===k?"on":""}">${l}</button>`).join("")}</div><div id="rvPv"></div></div>
-  </div>`;
-  bindRvChips();
-  const vals = () => { const v = {}; document.querySelectorAll("#rvForm [data-k]").forEach(el => v[el.dataset.k] = clean(el.value)); return v; };
+    <div class="card"><div class="tabs">${[["letter","Letter (exactly as it will look)"],["email","Email"]].map(([k,l]) => `<button data-t="${k}" class="${PS.tab===k?"on":""}">${l}</button>`).join("")}</div><div id="psPv"></div></div></div>
+    ${bulkBox()}`;
+  $("#psF").onchange = e => { PS.filter = e.target.value; PS.id = null; pageSend(); };
+  bindBulk();
+  const vals = () => { const v = {}; document.querySelectorAll("#psForm [data-k]").forEach(el => v[el.dataset.k] = clean(el.value)); return v; };
+  const move = d => { const nq = psQueue(); const i = nq.findIndex(x => x.ID === g.ID); const nxt = i < 0 ? nq[0] : (nq[i + d] || nq[Math.min(i, nq.length - 1)] || nq[0]); PS.id = nxt ? nxt.ID : null; pageSend(); };
   const refresh = (withPreview) => {
     const t = tempGuest(g, vals());
-    $("#rvName").textContent = `${t._title || t.Title} ${t["First Name"]} ${t.Surname}`.trim() || t.Organisation || "Guest";
+    $("#psName").textContent = `${t._title || t.Title} ${t["First Name"]} ${t.Surname}`.trim() || "New person";
+    const st = g["Sent On"] ? "sent" : g._excluded ? "excluded" : g["Draft Made On"] ? "drafted" : (t._blocked ? "blocked" : g["Approved to Send By"] ? "ready" : "approval");
+    const [lbl, cls] = STATUS[st]; $("#psChip").innerHTML = `<span class="chip ${cls}">${lbl}</span>`;
+    const stepIdx = { blocked:0, approval:0, ready:1, drafted:2, sent:3, excluded:-1 }[st];
+    $("#psTrack").innerHTML = ["1 · Check & approve","2 · Send the email","3 · Mark as sent"].map((s,i) => `<div class="${i<stepIdx?"done":i===stepIdx?"now":""}">${i<stepIdx?"✓ ":""}${s}</div>`).join("");
     const blocks = t._issues.filter(i => i.level === "block"), warns = t._issues.filter(i => i.level === "warn"), infos = t._issues.filter(i => i.level === "info");
-    $("#rvIssues").innerHTML = blocks.map(i => `<li class="block"><b>Fix:</b> ${esc(i.msg)}</li>`).join("") + warns.map(i => `<li class="warn"><b>Check:</b> ${esc(i.msg)}</li>`).join("") + infos.map(i => `<li class="info">${esc(i.msg)}</li>`).join("") || `<li class="info">✓ Everything looks right.</li>`;
-    $("#rvChip").innerHTML = blocks.length ? `<span class="chip c-blocked">Needs fixing</span>` : `<span class="chip c-approval">Ready to approve</span>`;
-    const tp = S.templates[t._lang.toLowerCase()];
-    const can = !blocks.length && tp && tp.letterOk && tp.emailOk;
-    $("#rvApprove").disabled = !can;
-    $("#rvApprove").title = can ? "Approve this guest" : blocks.length ? "Fix the red items first" : "The letter template for this language isn't approved yet";
-    if (withPreview) { clearTimeout(RV.timer); RV.timer = setTimeout(() => rvPreview(t), 500); }
+    $("#psIssues").innerHTML = st === "sent" ? `<li class="info">${esc(infos[0] ? infos[0].msg : "Sent.")}</li>` :
+      (blocks.map(i => `<li class="block"><b>Fix:</b> ${esc(i.msg)}</li>`).join("") + warns.map(i => `<li class="warn"><b>Check:</b> ${esc(i.msg)}</li>`).join("") + infos.map(i => `<li class="info">${esc(i.msg)}</li>`).join("") || `<li class="info">✓ Everything looks right.</li>`);
+    renderActions(g, t, st, blocks.length);
+    if (withPreview) { clearTimeout(PS.timer); PS.timer = setTimeout(() => psPreview(t), 450); }
     return t;
   };
-  document.querySelectorAll("#rvForm [data-k]").forEach(el => el.addEventListener("input", () => refresh(true)));
-  document.querySelectorAll("#rvForm select").forEach(el => el.addEventListener("change", () => refresh(true)));
-  document.querySelectorAll(".rv .tabs button").forEach(b => b.onclick = () => { RV.tab = b.dataset.t; document.querySelectorAll(".rv .tabs button").forEach(x => x.classList.toggle("on", x === b)); rvPreview(refresh(false)); });
-  const move = d => { const nq = rvQueue(); const i = nq.findIndex(x => x.ID === g.ID); const nxt = nq[i + d] || nq[i + d - 1] || nq[0]; RV.id = nxt ? nxt.ID : null; pageReview(); };
-  const saveVals = (approving) => {
-    const v = vals(), changed = Object.entries(v).filter(([k,val]) => (g[k]||"") !== val && !(k === "Letter Language" && g._lang === val && !g[k]));
-    for (const [k,val] of changed) { g[k] = val; setCell("Invitees", g.row, k, val); }
-    if (changed.length) log("Edited", g, "", changed.map(([k]) => k).join(", "));
-    if (!approving && changed.length && g["Approved to Send By"]) { g["Approved to Send By"] = ""; g["Approved On"] = ""; setCell("Invitees", g.row, "Approved to Send By", ""); setCell("Invitees", g.row, "Approved On", ""); }
-    if (changed.some(([k]) => k === "Letter Language") && g["Language Approved By"]) { g["Language Approved By"] = ""; setCell("Invitees", g.row, "Language Approved By", ""); }
-    return changed.length;
+  const renderActions = (g, t, st, nBlocks) => {
+    const tp = S.templates[t._lang.toLowerCase()], tplOk = tp && tp.body && tp.letterOk && tp.emailOk;
+    const why = nBlocks ? "Fix the red items above first." : !tplOk ? `The ${t._lang} letter isn't approved yet (see Letter).` : "";
+    const A = $("#psAct"); let h = "";
+    if (st === "blocked" || st === "approval") {
+      h = `<div class="actrow"><button class="primary big" id="aGo" ${why?"disabled":""}>✓ Approve & ${app.verb}</button><button id="aOnly" ${why?"disabled":""}>Approve only</button></div>
+        ${why ? `<p class="hint" style="color:var(--red)">${esc(why)}</p>` : ""}
+        <p class="hint"><b>What happens:</b> approving records that you checked this letter. ${mailApp()==="outlook-app" ? "The email then downloads as a file: <b>click it in your downloads</b> and it opens in Outlook, ready to send with the letter attached." : mailApp()==="other" ? "You then get the letter and the email text to copy." : `A new ${esc(app.short)} email then opens, already filled in, and the letter downloads: <b>drag the letter into the email</b>.`} <b>Nothing is sent until you press Send.</b> Any corrections you typed are saved too.</p>`;
+    } else if (st === "ready") {
+      h = `<div class="actrow"><button class="primary big" id="aOpen">✉ ${app.verb[0].toUpperCase() + app.verb.slice(1)}</button><button id="aUnap">Remove approval</button></div>
+        <p class="hint">Approved by ${esc(g["Approved to Send By"])} · ${esc(g["Approved On"])}. ${mailApp()==="outlook-app" ? "The email downloads as a file: click it to open it in Outlook, check it, press Send." : `Opens a filled-in email in ${esc(app.short)}; drag the downloaded letter into it, then Send.`}</p>`;
+    } else if (st === "drafted") {
+      h = `<div class="actrow"><button class="primary big" id="aSent">✓ I've sent it</button><button id="aAgain">Open the email again</button></div>
+        <p class="hint">Email opened ${esc(g["Draft Made On"])}. Once it has left your Outbox, click <b>I've sent it</b>: this person is then locked so they can never get a second letter.</p>`;
+    } else if (st === "sent") {
+      h = `<p class="hint">Sent ${esc(g["Sent On"])}${g["Sent By"] ? " by " + esc(g["Sent By"]) : ""}. Locked: this person can't be sent another invitation.</p>`;
+    } else if (st === "excluded") {
+      h = `<div class="actrow"><button id="aInc">Invite this person after all</button></div><p class="hint">This person is on file but won't be invited.</p>`;
+    }
+    if (st !== "sent") h += `<div class="links">${st !== "excluded" ? `<button class="ghost small" id="aSave">Save changes</button>` : ""}<button class="ghost small" id="aSkip">Skip to next</button>${st !== "excluded" && st !== "drafted" ? `<button class="ghost small" id="aNo">Don't invite this person</button>` : ""}${st === "drafted" ? `<button class="ghost small" id="aManual">Already sent another way</button>` : ""}</div>`;
+    A.innerHTML = h;
+    const bind = (id, fn) => { const el = $(id); if (el) el.onclick = fn; };
+    bind("#aGo", () => approve(true)); bind("#aOnly", () => approve(false));
+    bind("#aOpen", () => openEmail(g).then(() => pageSend()));
+    bind("#aUnap", () => { g["Approved to Send By"] = ""; g["Approved On"] = ""; setCell("Invitees", g.row, "Approved to Send By", ""); setCell("Invitees", g.row, "Approved On", ""); log("Approval removed", g); evaluateAll(); autoSave(); pageSend(); });
+    bind("#aSent", () => markSent([g]));
+    bind("#aAgain", async () => { if (await confirmModal("Open the email again?", "<p>Only do this if the first email was <b>not</b> sent (for example you closed it, or corrected something). Delete the old one so the two can't be mixed up.</p>", "Open again")) { await openEmail(g, true); pageSend(); } });
+    bind("#aInc", () => { g["Do Not Invite"] = ""; setCell("Invitees", g.row, "Do Not Invite", ""); log("Invited again", g); evaluateAll(); autoSave(); pageSend(); });
+    bind("#aSave", () => { if (!needName()) return; const n = applyEdits(g, vals()); evaluateAll(); if (n) { autoSave(); toast("Saved"); } pageSend(); });
+    bind("#aSkip", () => move(1));
+    bind("#aNo", () => { if (!needName()) return; applyEdits(g, vals()); g["Do Not Invite"] = "Yes"; setCell("Invitees", g.row, "Do Not Invite", "Yes"); log("Marked: don't invite", g); evaluateAll(); autoSave(); toast("Won't be invited (undo any time from the Guest list)"); move(0); });
+    bind("#aManual", () => markSent([g], true));
   };
-  $("#rvPrev").onclick = () => move(-1); $("#rvNext").onclick = () => move(1);
-  $("#rvJump").onchange = e => { RV.id = e.target.value; pageReview(); };
-  $("#rvSkip").onclick = () => move(1);
-  $("#rvSave").onclick = () => { if (!needName()) return; const n = saveVals(false); evaluateAll(); if (n) { autoSave(); toast("Changes saved"); } move(1); };
-  $("#rvApprove").onclick = () => {
+  const approve = async (andOpen) => {
     if (!needName()) return;
-    saveVals(true); evaluateAll();
-    if (g._blocked) { toast("Something still needs fixing"); return pageReview(); }
+    applyEdits(g, vals()); evaluateAll();
+    if (g._blocked) { toast("Something still needs fixing"); return pageSend(); }
     const t = nowStamp();
     if (!g["Language Approved By"]) { g["Language Approved By"] = who(); setCell("Invitees", g.row, "Language Approved By", who()); }
     g["Approved to Send By"] = who(); g["Approved On"] = t; setCell("Invitees", g.row, "Approved to Send By", who()); setCell("Invitees", g.row, "Approved On", t);
-    log(`Approved to send (${g._lang})`, g); evaluateAll(); autoSave(); toast(`✓ ${g["First Name"]} ${g.Surname} approved`);
-    move(0);
+    log(`Approved (${g._lang})`, g); evaluateAll(); autoSave();
+    if (andOpen) { if (!needSig()) return pageSend(); await openEmail(g); }
+    else toast(`✓ ${esc(g["First Name"])} ${esc(g.Surname)} approved`);
+    pageSend();
   };
-  $("#rvNo").onclick = () => { if (!needName()) return; saveVals(false); g["Do Not Invite"] = "Yes"; setCell("Invitees", g.row, "Do Not Invite", "Yes"); log("Marked: don't invite", g); evaluateAll(); autoSave(); toast("Moved to Not inviting (you can undo this in Guests)"); move(0); };
-  rvPreview(refresh(false));
+  document.querySelectorAll("#psForm [data-k]").forEach(el => { el.addEventListener("input", () => refresh(true)); el.addEventListener("change", () => refresh(true)); });
+  document.querySelectorAll(".ps .tabs button").forEach(b => b.onclick = () => { PS.tab = b.dataset.t; document.querySelectorAll(".ps .tabs button").forEach(x => x.classList.toggle("on", x === b)); psPreview(refresh(false)); });
+  $("#psPrev").onclick = () => move(-1); $("#psNext").onclick = () => move(1);
+  $("#psJump").onchange = e => { PS.id = e.target.value; pageSend(); };
+  psPreview(refresh(false));
 }
-function bindRvChips(){ document.querySelectorAll("[data-rf]").forEach(el => el.onclick = () => { RV.filter = el.dataset.rf; RV.id = null; pageReview(); }); }
-async function rvPreview(t){
-  const pv = $("#rvPv"); if (!pv) return;
+async function psPreview(t){
+  const pv = $("#psPv"); if (!pv) return;
   const can = t._canBuild && !badChars([t.Title,t["First Name"],t.Surname,t.Position,t.Organisation,t.Country,t["Salutation Override"]].join(" ")).length;
-  if (!can) { pv.innerHTML = `<p class="muted" style="padding:30px;text-align:center">The preview appears once the title, surname and organisation are filled in and the language has a letter template.</p>`; return; }
-  if (RV.tab === "email") {
-    pv.innerHTML = `<div class="kv"><div>To</div><div>${esc(`${t._title} ${t["First Name"]} ${t.Surname}`)} &lt;${esc(t.Email || "no email yet")}&gt;</div>${[clean(S.brief["CC on every email"]),t["CC Emails"]].filter(Boolean).length?`<div>Cc</div><div>${esc([clean(S.brief["CC on every email"]),t["CC Emails"]].filter(Boolean).join("; "))}</div>`:""}<div>Subject</div><div>${esc(emailSubject(t))}</div><div>Attached</div><div>${esc(fileBase(t))}.pdf</div></div><div class="mail">${esc(emailText(t))}</div>`;
+  if (!can) { pv.innerHTML = `<p class="muted" style="padding:30px;text-align:center">The preview appears once the title, surname and organisation are filled in and this language has a letter.</p>`; return; }
+  if (PS.tab === "email") {
+    const cc = [clean(S.brief["CC on every email"]), t["CC Emails"]].filter(Boolean).join("; ");
+    pv.innerHTML = `<div class="kv"><div>To</div><div>${esc(`${t._title} ${t["First Name"]} ${t.Surname}`)} &lt;${esc(t.Email || "no email yet")}&gt;</div>${cc ? `<div>Cc</div><div>${esc(cc)}</div>` : ""}<div>Subject</div><div>${esc(emailSubject(t))}</div><div>Attached</div><div>${esc(fileBase(t))}.pdf</div></div><div class="mail">${esc(emailText(t))}</div>`;
     return;
   }
-  try {
-    const bytes = await buildPdf(t);
-    if (RV.url) URL.revokeObjectURL(RV.url);
-    RV.url = URL.createObjectURL(new Blob([bytes], {type:"application/pdf"}));
-    if ($("#rvPv") && RV.tab === "letter") $("#rvPv").innerHTML = `<iframe src="${RV.url}#toolbar=0&view=FitH" style="height:680px"></iframe>`;
-  } catch(e) { pv.innerHTML = `<p class="muted">Couldn't draw the letter: ${esc(e.message)}</p>`; }
+  try { const bytes = await buildPdf(t); if (PS.url) URL.revokeObjectURL(PS.url); PS.url = URL.createObjectURL(new Blob([bytes], {type:"application/pdf"}));
+    if ($("#psPv") && PS.tab === "letter") $("#psPv").innerHTML = `<iframe src="${PS.url}#toolbar=0&view=FitH"></iframe>`; }
+  catch(e) { pv.innerHTML = `<p class="muted">Couldn't draw the letter: ${esc(e.message)}</p>`; }
+}
+function needSig(){ if (IMG.sig) return true; showModal("Load the signature first", "<p>Letters are signed with the signatory's signature image, which is kept on each computer rather than in the site. Open <b>Letter</b> and click <b>Load signature image</b>.</p>", [["Close",null],["Open Letter", () => go("letter"), true]]); return false; }
+function composeUrl(app, to, cc, subject, body){
+  const e = encodeURIComponent;
+  if (app === "gmail") return `https://mail.google.com/mail/?view=cm&fs=1&to=${e(to)}${cc ? `&cc=${e(cc)}` : ""}&su=${e(subject)}&body=${e(body)}`;
+  return `https://outlook.office.com/mail/deeplink/compose?to=${e(to)}${cc ? `&cc=${e(cc)}` : ""}&subject=${e(subject)}&body=${e(body)}`;
+}
+async function openEmail(g, again){
+  if (!needName() || !needSig()) return;
+  const app = mailApp(), pdf = await buildPdf(g), base = fileBase(g);
+  const cc = [clean(S.brief["CC on every email"]), g["CC Emails"]].filter(Boolean).join(";");
+  if (app === "outlook-app") {
+    await download(new Blob([buildEml(g, pdf, base + ".pdf")], {type:"message/rfc822"}), base + ".eml");
+    toast(`Email for <b>${esc(g["First Name"])} ${esc(g.Surname)}</b> downloaded. Click it in your downloads to open it in Outlook, then press Send.`, 7000);
+  } else if (app === "gmail" || app === "outlook-web") {
+    await download(new Blob([pdf], {type:"application/pdf"}), base + ".pdf");
+    const a = document.createElement("a"); a.href = composeUrl(app, g.Email, cc, emailSubject(g), emailText(g)); a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove();
+    toast(`A new ${esc(MAIL[app].short)} email opened in another tab. Drag the letter you just downloaded (<b>${esc(base)}.pdf</b>) into it, then Send.`, 8000);
+  } else {
+    await download(new Blob([pdf], {type:"application/pdf"}), base + ".pdf");
+    const copy = (id, text) => `<div class="kv" style="grid-template-columns:90px 1fr auto;align-items:start"><div>${id}</div><div class="mail" style="padding:6px 8px">${esc(text)}</div><button class="small" data-copy="${esc(text)}">Copy</button></div>`;
+    showModal("Your email, ready to copy", `<p class="small muted">The letter downloaded as <b>${esc(base)}.pdf</b>: attach it to the email.</p>${copy("To", g.Email)}${cc ? copy("Cc", cc) : ""}${copy("Subject", emailSubject(g))}${copy("Message", emailText(g))}`, [["Done", null, true]]);
+    document.querySelectorAll("[data-copy]").forEach(b => b.onclick = async () => { try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = "Copied"; } catch(e) { b.textContent = "Select and copy"; } });
+  }
+  const t = nowStamp(); g["Draft Made On"] = t; setCell("Invitees", g.row, "Draft Made On", t);
+  log(again ? "Email opened again" : "Email opened", g, base, MAIL[app].short); evaluateAll(); autoSave();
+}
+function markSent(list, manual){
+  if (!needName()) return;
+  list = list.filter(g => !g["Sent On"]); if (!list.length) return;
+  const one = list.length === 1;
+  showModal(one ? `Mark ${esc(list[0]["First Name"] + " " + list[0].Surname)} as sent?` : `Mark ${list.length} people as sent?`,
+    `<p>Only once the email has actually left your Outbox. ${one ? "They are" : "They are all"} then <b>locked</b>, so nobody can invite them a second time.</p>${one ? "" : `<ul>${list.map(g => `<li>${esc(g["First Name"] + " " + g.Surname)} &lt;${esc(g.Email)}&gt;</li>`).join("")}</ul>`}${manual ? `<p>How was it sent?</p><textarea id="mr" rows="2" placeholder="e.g. sent from Outlook on 15 Oct by Danita"></textarea>` : ""}`,
+    [["Cancel",null],["Yes, it's sent", () => {
+      const reason = manual ? clean(($("#mr") || {}).value) : "";
+      if (manual && !reason) { setTimeout(() => toast("Please say how it was sent"), 30); return; }
+      const t = nowStamp();
+      for (const g of list) { g["Sent On"] = t; g["Sent By"] = who(); setCell("Invitees", g.row, "Sent On", t); setCell("Invitees", g.row, "Sent By", who()); log(manual ? "Recorded as sent (outside the Hub)" : "Sent", g, "", reason); }
+      evaluateAll(); autoSave(); toast(one ? "✓ Marked as sent" : `✓ ${list.length} marked as sent`);
+      if (route === "send") { const nq = psQueue(); PS.id = nq[0] ? nq[0].ID : null; pageSend(); } else draw();
+    }, true]]);
+}
+function bulkBox(){
+  const c = counts(), drafted = S.guests.filter(g => g._status === "drafted");
+  const quick = S.guests.filter(g => g._status === "approval" && !g._warns && (() => { const t = S.templates[g._lang.toLowerCase()]; return t && t.letterOk && t.emailOk; })());
+  return `<details class="more"><summary>Doing many people at once?</summary><div class="card" style="margin-top:10px;display:grid;gap:14px">
+    <div class="actrow"><button id="bkAp" ${quick.length?"":"disabled"}>Approve all ${quick.length} with nothing to check</button><span class="hint" style="margin:0">Only people with no warnings, whose letter language is approved. You confirm you've reviewed their letters.</span></div>
+    ${mailApp() === "outlook-app" ? `<div class="actrow"><button id="bkZip" ${c.ready?"":"disabled"}>Create all ${c.ready} approved emails at once (one zip file)</button><span class="hint" style="margin:0">Unzip, open the "Outlook emails" folder and double-click each one.</span></div>` : `<div class="actrow"><button id="bkZip" ${c.ready?"":"disabled"}>Download all ${c.ready} approved letters (one zip file)</button><span class="hint" style="margin:0">Then send each email from ${esc(MAIL[mailApp()].short)} and mark it sent.</span></div>`}
+    ${drafted.length ? `<div><div class="actrow"><button id="bkSent">Mark ticked as sent</button><button class="ghost small" id="bkAll">Tick all</button></div><div style="max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:10px;margin-top:8px">${drafted.map(g => `<label style="display:flex;gap:8px;padding:6px 10px;border-bottom:1px solid #f3ecf0;font-size:13px"><input type="checkbox" class="bkc" data-id="${esc(g.ID)}"> ${esc(g["First Name"] + " " + g.Surname)} <span class="muted">&lt;${esc(g.Email)}&gt;</span></label>`).join("")}</div></div>` : ""}
+  </div></details>`;
+}
+function bindBulk(){
+  const b1 = $("#bkAp"); if (b1) b1.onclick = () => {
+    if (!needName()) return;
+    const quick = S.guests.filter(g => g._status === "approval" && !g._warns && (() => { const t = S.templates[g._lang.toLowerCase()]; return t && t.letterOk && t.emailOk; })());
+    showModal(`Approve ${quick.length} people?`, `<p>You confirm you've reviewed their letters and they should all be invited. Nothing is sent.</p>`, [["Cancel",null],["Approve", () => {
+      const t = nowStamp(); for (const g of quick) { if (!g["Language Approved By"]) { g["Language Approved By"] = who(); setCell("Invitees", g.row, "Language Approved By", who()); } g["Approved to Send By"] = who(); g["Approved On"] = t; setCell("Invitees", g.row, "Approved to Send By", who()); setCell("Invitees", g.row, "Approved On", t); log(`Approved (${g._lang})`, g); }
+      evaluateAll(); autoSave(); pageSend(); toast(`✓ ${quick.length} approved`); }, true]]);
+  };
+  const b2 = $("#bkZip"); if (b2) b2.onclick = batchEmails;
+  const b3 = $("#bkSent"); if (b3) b3.onclick = () => { const ids = new Set([...document.querySelectorAll(".bkc:checked")].map(x => x.dataset.id)); markSent(S.guests.filter(g => ids.has(g.ID))); };
+  const b4 = $("#bkAll"); if (b4) b4.onclick = () => document.querySelectorAll(".bkc").forEach(x => x.checked = true);
+}
+async function batchEmails(){
+  if (!needName() || !needSig()) return;
+  const list = S.guests.filter(g => g._status === "ready"); if (!list.length) return;
+  showModal("Creating…", `<p id="prog">0 / ${list.length}</p>`, []);
+  const app = mailApp(), zip = new JSZip(), stamp = nowStamp().replace(/[: ]/g,"-"), folder = zip.folder(`${S.prefix}_emails_${stamp}`);
+  const rows = [["Guest ID","Guest","Organisation","Email","CC","Language","Letter","Email file","Approved by"]], t = nowStamp();
+  for (let i = 0; i < list.length; i++) {
+    const g = list[i], base = fileBase(g), pdf = await buildPdf(g);
+    folder.file(`Letters/${base}.pdf`, pdf);
+    if (app === "outlook-app") folder.file(`Outlook emails/${base}.eml`, buildEml(g, pdf, base + ".pdf"));
+    rows.push([g.ID, `${g._title} ${g["First Name"]} ${g.Surname}`, g.Organisation, g.Email, g["CC Emails"], g._lang, base + ".pdf", app === "outlook-app" ? base + ".eml" : "", g["Approved to Send By"]]);
+    const pe = $("#prog"); if (pe) pe.textContent = `${i + 1} / ${list.length}`;
+  }
+  folder.file("Checklist.csv", "﻿" + rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g,'""')}"`).join(",")).join("\r\n"));
+  if (app === "outlook-app") folder.file("READ ME FIRST.txt", "Open the 'Outlook emails' folder and double-click each file: it opens in Outlook ready to send, with the letter attached. Check it, press Send, then mark it as sent in the AWEP Events Hub.\r\n");
+  const blob = await zip.generateAsync({type:"blob"}); lastZip = { blob, name: `${S.prefix}_emails_${stamp}.zip` };
+  closeModal(); await download(blob, lastZip.name);
+  for (const g of list) { g["Draft Made On"] = t; setCell("Invitees", g.row, "Draft Made On", t); log("Email created (batch)", g, fileBase(g) + (app === "outlook-app" ? ".eml" : ".pdf")); }
+  evaluateAll(); autoSave(); pageSend();
+  showModal(`${list.length} ready`, `<p>Saved as <b>${esc(lastZip.name)}</b> in your downloads. ${app === "outlook-app" ? "Unzip it, open <b>Outlook emails</b> and double-click each one, then press Send." : `Send each email from ${esc(MAIL[app].short)} with its letter attached.`}</p><p>When they've gone, come back here and mark them as sent.</p>`, [["OK",null,true]]);
 }
 
-/* ---------- page help boxes ---------- */
-const HELP = {
-  home: ["This is your event at a glance.", "Follow <b>What to do next</b> from top to bottom: each button takes you to the right place."],
-  newevent: ["Answer the questions once and the Hub creates the event's workbook (the Excel file that stores everything).", "Keep that file in your team's shared folder. Next time, click <b>Open workbook</b> and choose it."],
-  add: ["Bring people into this event from a guest list or from the AWEP contact list.", "Nothing is sent from here. Added guests appear in <b>Review &amp; approve</b>."],
-  review: ["Go through guests one by one. Correct anything in the boxes on the left: the letter on the right updates as you type.", "<b>Approve &amp; next</b> confirms this person should get the letter. <b>Nothing is sent</b> until you create the emails in <b>Send letters</b>."],
-  guests: ["Everyone on this event's list. Click a person to see or change their details.", "To check and approve people one at a time, use <b>Review &amp; approve</b>."],
-  send: ["Turn approved guests into ready-to-send Outlook emails, then record that you sent them.", "The Hub never sends anything by itself: you press Send in Outlook."],
-  templates: ["The wording of the letter and the covering email, for each language.", "A language can only be used after someone who speaks it clicks <b>Approve</b>. Changing the wording removes the approval."],
-  log: ["Everything that happened, with who and when: approvals, edits, emails created, sends."],
-  event: ["The event's details and the signature used on the letters."]
+/* ---------- LETTER ---------- */
+let LT = { edit: null, upload: null };
+function pageLetter(){
+  head(`${evCrumb()} ›`, "Letter", "Upload the letter you drafted in Word, or edit it here. Someone who speaks the language approves it before it can be sent.");
+  const used = usedLangs();
+  const shown = Object.values(S.templates).filter(t => t.body || used.has(t.lang.toLowerCase()) || LT.edit === t.lang.toLowerCase()).sort((a,b) => a.row - b.row);
+  const others = Object.values(S.templates).filter(t => !shown.includes(t) && t.lang.toLowerCase() !== "arabic");
+  let h = "";
+  if (LT.upload) h += uploadReview();
+  else h += `<div class="big-drop"><b style="color:var(--aub);font-size:15px">Already drafted the letter?</b><div class="muted" style="margin:4px 0 10px">Upload the Word file (.docx). The Hub reads the heading, the text and the signatory, and adds each guest's name, address and greeting itself.</div><label class="fchip on" style="cursor:pointer;display:inline-block;padding:9px 18px">Upload a Word letter<input type="file" id="ltUp" accept=".docx" class="hide"></label></div>`;
+  h += `<div class="lang-cards" style="margin-top:14px">` + shown.map(t => {
+    const k = t.lang.toLowerCase(), n = S.guests.filter(g => !g._excluded && g._lang.toLowerCase() === k).length;
+    if (k === "arabic") return `<div class="card"><h3 class="h">Arabic</h3><p class="muted">Arabic letters can't be made here yet (right-to-left script). Prepare them in Word for now. ${n} guest(s) set to Arabic.</p></div>`;
+    if (LT.edit === k) return tplEditor(t);
+    if (!t.body) return `<div class="card"><h3 class="h">${esc(t.lang)}</h3><p class="muted">${n} guest(s) are set to ${esc(t.lang)}, but there's no ${esc(t.lang)} letter yet.</p><button data-ed="${k}">Write the ${esc(t.lang)} letter</button></div>`;
+    const ok = t.letterOk && t.emailOk;
+    return `<div class="card"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><h3 class="h" style="margin:0">${esc(t.lang)}</h3><span class="muted small">${n} guest(s) · dated ${esc(t.date)}</span><div style="flex:1"></div>${ok ? `<span class="ok">✓ Approved by ${esc(t.letterOk)}</span>` : `<span class="no">Not approved yet</span>`}</div>
+      <div style="font-weight:600;text-decoration:underline;margin:10px 0 4px">${esc(t.heading)}</div>
+      <div class="mail" style="max-height:170px;overflow:auto">${esc(t.body.replace(/\*\*/g,""))}</div>
+      <div class="small muted" style="margin-top:8px"><b>Email subject:</b> ${esc(t.subject)}</div>
+      <div class="actrow" style="margin-top:12px"><button data-pv="${k}">See the letter</button><button data-ed="${k}">Edit</button><div style="flex:1"></div>${ok ? "" : `<button class="primary" data-ap="${k}">I've read it — approve the ${esc(t.lang)} letter</button>`}</div></div>`;
+  }).join("") + `</div>`;
+  if (others.length) h += `<div class="actrow" style="margin-top:10px"><span class="small muted">Another language:</span>${others.map(t => `<button class="small" data-ed="${t.lang.toLowerCase()}">+ ${esc(t.lang)}</button>`).join("")}</div>`;
+  h += `<div class="card" style="margin-top:16px"><h3 class="h">Signature on the letters</h3>${SIG_BUILTIN ? `<p class="muted">This copy of the Hub has the signature built in.</p>` :
+    `<p class="muted" style="margin-top:0">For safety the signature isn't stored in the site. Load the image once on this computer; it's remembered in this browser.</p><div class="actrow">${IMG.sig ? `<img alt="Signature" style="height:46px;border:1px solid var(--line);border-radius:6px;padding:4px;background:#fff" src="data:image/${IMG.sigType==="png"?"png":"jpeg"};base64,${bytesToB64(IMG.sig)}">` : `<span class="no">Not loaded on this computer</span>`}<label class="fchip" style="cursor:pointer">${IMG.sig ? "Replace" : "Load"} signature image<input type="file" id="sigFile" accept="image/png,image/jpeg" class="hide"></label></div>`}
+    <div class="small muted" style="margin-top:10px"><b>Signatory printed under it:</b> ${esc((S.brief["Signatory block"] || "").replace(/\n/g, " · "))}</div></div>`;
+  $("#page").innerHTML = h;
+  const up = $("#ltUp"); if (up) up.onchange = async e => { const f = e.target.files[0]; if (!f) return; try { LT.upload = parseLetter(await readDocx(f)); LT.upload.file = f.name; LT.upload.lang = guessLang(LT.upload); pageLetter(); } catch(err) { showModal("Couldn't read that file", `<p>${esc(err.message || err)}</p><p class="small muted">Use a Word .docx file. Old .doc files: open in Word and "Save as" .docx first.</p>`, [["OK",null,true]]); } };
+  document.querySelectorAll("[data-ed]").forEach(b => b.onclick = () => { LT.edit = b.dataset.ed; pageLetter(); });
+  document.querySelectorAll("[data-ap]").forEach(b => b.onclick = () => approveTpl(S.templates[b.dataset.ap]));
+  document.querySelectorAll("[data-pv]").forEach(b => b.onclick = () => previewTpl(S.templates[b.dataset.pv]));
+  bindTplEditor(); bindUploadReview();
+  const sf = $("#sigFile"); if (sf) sf.onchange = async e => { const f = e.target.files[0]; if (!f) return; const b = new Uint8Array(await f.arrayBuffer()); IMG.sig = b; IMG.sigType = /png/i.test(f.type) ? "png" : "jpg";
+    try { localStorage.setItem("awepHubSignature", `data:image/${IMG.sigType==="png"?"png":"jpeg"};base64,${bytesToB64(b)}`); } catch(_){ toast("Loaded for this session only"); } pageLetter(); toast("Signature loaded"); };
+}
+function tplEditor(t){
+  return `<div class="card" id="tplEd" data-k="${t.lang.toLowerCase()}"><h3 class="h">${esc(t.lang)} letter</h3><div class="form">
+    <label>Letter date<input type="text" data-f="Letter Date" value="${esc(t.date)}"></label><label>Closing<input type="text" data-f="Closing" value="${esc(t.closing || (t.lang === "English" ? "Yours sincerely," : ""))}"></label>
+    <label class="full">Heading (printed bold and underlined)<input type="text" data-f="Letter Heading" value="${esc(t.heading)}"></label>
+    <label class="full">Letter text — leave a blank line between paragraphs; put **two stars** around words to make them bold<textarea data-f="Letter Body" rows="12">${esc(t.body)}</textarea></label>
+    <label class="full">Email subject<input type="text" data-f="Email Subject" value="${esc(t.subject)}"></label>
+    <label class="full">Short covering email — {greeting} becomes "Dear Dr. Melu," etc.<textarea data-f="Email Note" rows="7">${esc(t.note)}</textarea></label></div>
+    <p class="hint">The guest's name, title, address and greeting are added automatically for each person. Saving removes the approval, so someone reads it again.</p>
+    <div class="actrow" style="justify-content:flex-end;margin-top:8px"><button id="teC">Cancel</button><button class="primary" id="teS">Save</button></div></div>`;
+}
+function bindTplEditor(){
+  const ed = $("#tplEd"); if (!ed) return;
+  $("#teC").onclick = () => { LT.edit = null; pageLetter(); };
+  $("#teS").onclick = () => {
+    if (!needName()) return;
+    const t = S.templates[ed.dataset.k], vals = {};
+    ed.querySelectorAll("[data-f]").forEach(el => vals[el.dataset.f] = el.tagName === "TEXTAREA" ? el.value.replace(/\r/g,"").trim() : clean(el.value));
+    if (!vals["Email Note"] && t.lang === "English") vals["Email Note"] = defaultNote();
+    saveTemplate(t, vals); LT.edit = null; pageLetter(); toast("Saved: now someone approves it");
+  };
+}
+function defaultNote(){ return `{greeting}\n\nOn behalf of the African Union Development Agency (AUDA-NEPAD), please find attached a letter inviting you to ${S.brief["Event name"] || "our event"}${S.brief["Event date"] ? ", to be held on " + S.brief["Event date"] : ""}${S.brief["City / venue"] ? " in " + S.brief["City / venue"] : ""}.\n\nWe would be grateful if you could confirm your attendance by replying to this email.\n\nKind regards,\n\nAfrican Women's Empowerment Programme (AWEP)\nAUDA-NEPAD`; }
+function saveTemplate(t, vals){
+  const th = sheetRows("Templates")[0].map(clean), map = {"Letter Date":"date","Letter Heading":"heading","Letter Body":"body","Closing":"closing","Email Subject":"subject","Email Note":"note"};
+  let changed = false;
+  for (const [f, v] of Object.entries(vals)) if (map[f] && t[map[f]] !== v) { t[map[f]] = v; setCell("Templates", t.row, th.indexOf(f), v); changed = true; }
+  if (changed) { t.letterOk = ""; t.emailOk = ""; setCell("Templates", t.row, S.tcol.letterOk, ""); setCell("Templates", t.row, S.tcol.emailOk, ""); log(`Letter edited (${t.lang})`, null, "", "approval removed"); evaluateAll(); autoSave(); }
+}
+function approveTpl(t){
+  if (!needName()) return;
+  showModal(`Approve the ${esc(t.lang)} letter?`, `<p>You confirm you've read the ${esc(t.lang)} letter and covering email in full and they're ready to send. Guests can then be approved in ${esc(t.lang)}.</p>`,
+    [["Cancel",null],["Approve", () => { t.letterOk = who(); t.emailOk = who(); setCell("Templates", t.row, S.tcol.letterOk, who()); setCell("Templates", t.row, S.tcol.emailOk, who()); log(`Letter approved (${t.lang})`, null); evaluateAll(); autoSave(); pageLetter(); }, true]]);
+}
+async function previewTpl(t){
+  const s0 = S.guests.find(g => g._canBuild && g._lang.toLowerCase() === t.lang.toLowerCase()) ||
+    { ID:"SAMPLE", Title:"Dr.", "First Name":"Amina", Surname:"Example", Position:"Managing Director", Organisation:"Example Bank Plc", Country:"Ghana", "Salutation Override":"", _title:"Dr." };
+  const s = Object.assign({}, s0, { _lang: t.lang }); if (!s._title) s._title = s.Title;
+  let bytes; try { bytes = await buildPdf(s); } catch(e) { return showModal("Can't show it", `<p>${esc(e.message)}</p>`, [["OK",null,true]]); }
+  const url = URL.createObjectURL(new Blob([bytes], {type:"application/pdf"}));
+  showModal(`${esc(t.lang)} letter`, `<p class="small muted">Shown for ${esc(s["First Name"] + " " + s.Surname)}.</p><iframe src="${url}#toolbar=0&view=FitH" style="height:600px"></iframe>`, [["Close",null,true]]);
+  $("#modal").style.maxWidth = "820px";
+}
+/* Word upload */
+async function readDocx(file){
+  const zip = await JSZip.loadAsync(await file.arrayBuffer());
+  const f = zip.file("word/document.xml"); if (!f) throw new Error("This doesn't look like a Word (.docx) file.");
+  const doc = new DOMParser().parseFromString(await f.async("string"), "application/xml");
+  const W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+  const on = el => el && !/^(0|false|none)$/i.test(el.getAttributeNS(W, "val") || el.getAttribute("w:val") || "");
+  const out = [];
+  for (const p of doc.getElementsByTagNameNS(W, "p")) {
+    const pPr = p.getElementsByTagNameNS(W, "pPr")[0];
+    const pb = pPr && pPr.getElementsByTagNameNS(W, "rPr")[0];
+    const runs = [];
+    for (const r of p.getElementsByTagNameNS(W, "r")) {
+      const rPr = r.getElementsByTagNameNS(W, "rPr")[0];
+      const b = on(rPr && rPr.getElementsByTagNameNS(W, "b")[0]), u = on(rPr && rPr.getElementsByTagNameNS(W, "u")[0]);
+      let t = ""; for (const n of r.childNodes) { if (n.localName === "t") t += n.textContent; else if (n.localName === "tab") t += " "; else if (n.localName === "br") t += " "; }
+      if (t) runs.push({ t, b, u });
+    }
+    const text = runs.map(r => r.t).join("").replace(/\s+/g, " ").trim();
+    if (!text) { out.push({ text: "" }); continue; }
+    const textRuns = runs.filter(r => r.t.trim());
+    const allB = textRuns.every(r => r.b), anyU = textRuns.some(r => r.u);
+    let md = ""; let open = false;
+    for (const r of runs) {
+      const core = r.t.trim(); if (!core) { md += r.t; continue; }
+      const lead = r.t.match(/^\s*/)[0], trail = r.t.match(/\s*$/)[0];
+      if (r.b && !open) { md += lead + "**" + core; open = true; } else if (!r.b && open) { md += "**" + lead + core; open = false; } else md += lead + core;
+      md += trail;
+    }
+    if (open) md = md.replace(/\s*$/, "") + "**";
+    md = md.replace(/\*\*(\s*)\*\*/g, "$1").replace(/\s+/g, " ").trim();
+    out.push({ text, md, bold: allB, underline: anyU });
+  }
+  return out;
+}
+function parseLetter(paras){
+  const P = paras.filter(p => p.text);
+  const months = "january|february|march|april|may|june|july|august|september|october|november|december|janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre|janeiro|fevereiro|março|marco|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro|enero|febrero|marzo|mayo|junio|julio|septiembre|octubre|noviembre|diciembre|januari|februari|machi|aprili|juni|julai|agosti|oktoba|novemba|desemba";
+  const dateRe = new RegExp(`^(\\d{1,2}(st|nd|rd|th)?(\\s+de|\\s+of)?\\s+(${months})(\\s+de)?,?\\s+\\d{4}|(${months})\\s+\\d{1,2},?\\s+\\d{4}|\\d{1,2}[/.-]\\d{1,2}[/.-]\\d{2,4})$`, "i");
+  const greetRe = /^(dear\b|your excellency|excellence|excelência|excelencia|madame|monsieur|mheshimiwa|mpendwa|estimad|caro\b|cara\b|honou?rable\b|distinguished)/i;
+  const closeRe = /^(yours (sincerely|faithfully|truly)|sincerely|kind regards|best regards|warm regards|with (kind|best) regards|veuillez agr|je vous prie|cordialement|atenciosamente|com os melhores|atentamente|wako)/i;
+  const iDate = P.findIndex(p => dateRe.test(p.text));
+  const iGreet = P.findIndex(p => greetRe.test(p.text));
+  let iClose = P.findIndex((p, i) => i > iGreet && closeRe.test(p.text));
+  const end = iClose < 0 ? P.length : iClose;
+  let iHead = P.findIndex((p, i) => i > iGreet && i < end && (p.underline || p.bold) && p.text.length > 12);
+  if (iHead < 0) iHead = P.findIndex((p, i) => i < end && (p.underline || p.bold) && /invit|convite|mwaliko|re:|subject|objet/i.test(p.text));
+  const start = Math.max(iHead, iGreet) + 1;
+  const body = P.slice(start, end).map(p => p.md).join("\n\n");
+  const sig = iClose >= 0 ? P.slice(iClose + 1).map(p => p.text).filter(t => !/^[_\-–.\s]+$/.test(t)).join("\n") : "";
+  return { date: iDate >= 0 ? P[iDate].text : "", greeting: iGreet >= 0 ? P[iGreet].text : "", heading: iHead >= 0 ? P[iHead].text.replace(/^(re|subject|objet)\s*:\s*/i, "") : "",
+    body, closing: iClose >= 0 ? P[iClose].text : "", sig, address: P.slice(Math.max(iDate, 0) + (iDate >= 0 ? 1 : 0), iGreet < 0 ? 0 : iGreet).map(p => p.text).join(" · ") };
+}
+function guessLang(u){
+  const t = (u.body + " " + u.heading).toLowerCase();
+  if (/\b(nous|vous|l'agence|événement|invitation à)\b/.test(t)) return "French";
+  if (/\b(convite|evento|vossa|senhor|agência)\b/.test(t)) return "Portuguese";
+  if (/\b(invitación|usted|evento paralelo|señor)\b/.test(t)) return "Spanish";
+  if (/\b(wakala|tukio|mwaliko|kwa)\b/.test(t)) return "Kiswahili";
+  return "English";
+}
+function uploadReview(){
+  const u = LT.upload;
+  return `<div class="card" id="upRv"><h3 class="h">Check what was read from "${esc(u.file)}"</h3>
+    <p class="muted" style="margin-top:0">Correct anything below, then click <b>Use this letter</b>. ${u.greeting || u.address ? `The recipient details in your draft (<i>${esc([u.address, u.greeting].filter(Boolean).join(" · ").slice(0,120))}</i>) were left out: the Hub adds each guest's own.` : ""}</p>
+    <div class="form">
+      <label>Language<select data-f="lang">${["English","French","Portuguese","Spanish","Kiswahili"].map(l => `<option ${u.lang===l?"selected":""}>${l}</option>`).join("")}</select></label>
+      <label>Letter date<input type="text" data-f="Letter Date" value="${esc(u.date)}"></label>
+      <label class="full">Heading<input type="text" data-f="Letter Heading" value="${esc(u.heading)}"></label>
+      <label class="full">Letter text (bold kept as **…**)<textarea data-f="Letter Body" rows="12">${esc(u.body)}</textarea></label>
+      <label>Closing<input type="text" data-f="Closing" value="${esc(u.closing)}"></label>
+      <label>Signatory (one line per line)<textarea data-f="sig" rows="4">${esc(u.sig || S.brief["Signatory block"] || "")}</textarea></label></div>
+    ${!u.heading || !u.body ? `<div class="note">Some parts weren't found automatically. Fill them in above.</div>` : ""}
+    <div class="actrow" style="justify-content:flex-end;margin-top:10px"><button id="upC">Cancel</button><button class="primary" id="upS">Use this letter</button></div></div>`;
+}
+function bindUploadReview(){
+  if (!$("#upRv")) return;
+  $("#upC").onclick = () => { LT.upload = null; pageLetter(); };
+  $("#upS").onclick = () => {
+    if (!needName()) return;
+    const v = {}; document.querySelectorAll("#upRv [data-f]").forEach(el => v[el.dataset.f] = el.tagName === "TEXTAREA" ? el.value.replace(/\r/g,"").trim() : clean(el.value));
+    if (!v["Letter Heading"] || !v["Letter Body"]) return toast("The heading and the letter text are needed");
+    const t = S.templates[v.lang.toLowerCase()];
+    const vals = { "Letter Date": v["Letter Date"], "Letter Heading": v["Letter Heading"], "Letter Body": v["Letter Body"], "Closing": v.Closing || "Yours sincerely," };
+    if (!t.subject) vals["Email Subject"] = `Invitation: ${S.brief["Event name"] || v["Letter Heading"]}`;
+    if (!t.note && v.lang === "English") vals["Email Note"] = defaultNote();
+    saveTemplate(t, vals);
+    if (v.sig && v.sig !== S.brief["Signatory block"]) { const br = sheetRows("Event Brief"); const i = br.findIndex(r => clean(r[0]) === "Signatory block"); if (i > 0) { setCell("Event Brief", i + 1, 1, v.sig); S.brief["Signatory block"] = v.sig; log("Signatory changed", null, "", v.sig.replace(/\n/g, " / ")); } }
+    log(`Letter uploaded from Word (${v.lang})`, null, LT.upload.file); autoSave();
+    LT.upload = null; pageLetter(); toast(`The ${esc(v.lang)} letter is in. Click <b>See the letter</b> to check it, then approve.`, 6000);
+  };
+}
+
+/* ---------- ADD GUESTS (wraps the importer) ---------- */
+function pageAddWrap(){
+  head(`${evCrumb()} ›`, "Add guests", "Import a guest list, or pick people from the AWEP contact list. Nothing is sent from here.");
+  pageAdd(); $("#title").textContent = "Add guests";
+  const s = document.querySelector("#page .small.muted"); if (s && /send the workbook to Claude/.test(s.textContent)) s.innerHTML = "To find new people online, send the event file to Claude: researched guests come back with a source for each.";
+}
+
+/* ---------- CONTACT LIST (search + export) ---------- */
+async function pageContacts(){
+  head("", "Contact list", "Search the AWEP master contact list by words, then export the matches to Excel or add them to an event.");
+  if (!CT) { const saved = await IDB.get("files", "contacts"); if (saved && saved.bytes) { try { CT = { src: await readSource(new File([saved.bytes], saved.name)), name: saved.name, loaded: saved.loaded, q: "", mode: "any", sheet: "", off: new Set() }; ctIndex(); } catch(e) { CT = null; } } }
+  if (!CT) {
+    $("#page").innerHTML = `<div class="big-drop"><b style="color:var(--aub);font-size:15px">Upload the AWEP master contact list</b><div class="muted" style="margin:4px 0 10px">Excel (.xlsx) or CSV. It stays on this computer and is remembered here, so you only upload it again when it changes.</div><label class="fchip on" style="cursor:pointer;display:inline-block;padding:9px 18px">Choose the contact list<input type="file" id="ctUp" accept=".xlsx,.xls,.csv" class="hide"></label></div>`;
+    $("#ctUp").onchange = ctUpload; return;
+  }
+  $("#topActions").innerHTML = `<label class="fchip" style="cursor:pointer">Upload a newer list<input type="file" id="ctUp" accept=".xlsx,.xls,.csv" class="hide"></label>`;
+  $("#ctUp").onchange = ctUpload;
+  $("#page").innerHTML = `<div class="card" style="margin-bottom:12px"><div class="small muted" style="margin-bottom:8px">Using <b>${esc(CT.name)}</b> · ${CT.rows.length} contacts${CT.loaded ? ` · uploaded ${esc(new Date(CT.loaded).toLocaleDateString("en-GB"))}` : ""}</div>
+      <div class="toolbar" style="margin:0"><input type="text" id="ctQ" placeholder="Type words separated by commas, e.g. bank, finance, microfinance" style="flex:1;min-width:280px;font-size:15px;padding:10px 12px" value="${esc(CT.q)}">
+      <select id="ctM"><option value="any" ${CT.mode==="any"?"selected":""}>Any of the words</option><option value="all" ${CT.mode==="all"?"selected":""}>All of the words</option></select>
+      <select id="ctS"><option value="">All sheets</option>${[...new Set(CT.rows.map(r => r.sheet))].map(s => `<option ${CT.sheet===s?"selected":""}>${esc(s)}</option>`).join("")}</select></div>
+      <p class="hint">Searches every column: name, organisation, position, country, notes, and where you met them.</p></div>
+    <div class="toolbar"><b id="ctN"></b><span class="small muted">Untick anyone you don't want.</span><div class="spacer"></div><button id="ctX">⬇ Download as Excel</button>${S ? `<button class="primary" id="ctA">Add to “${esc((S.brief["Event name"] || "this event").slice(0,40))}”</button>` : `<span class="small muted">Open an event to add them to it directly.</span>`}</div>
+    <div class="tablebox"><table><thead><tr><th><input type="checkbox" id="ctAll" checked></th><th>Name</th><th>Organisation</th><th>Position</th><th>Country</th><th>Email</th><th>Met at / sheet</th></tr></thead><tbody id="ctRows"></tbody></table></div>`;
+  $("#ctQ").oninput = e => { CT.q = e.target.value; CT.off.clear(); ctDraw(); };
+  $("#ctM").onchange = e => { CT.mode = e.target.value; CT.off.clear(); ctDraw(); };
+  $("#ctS").onchange = e => { CT.sheet = e.target.value; CT.off.clear(); ctDraw(); };
+  $("#ctAll").onchange = e => { ctMatches().forEach(r => e.target.checked ? CT.off.delete(r.i) : CT.off.add(r.i)); ctDraw(); };
+  $("#ctX").onclick = ctExport; if ($("#ctA")) $("#ctA").onclick = ctAddToEvent;
+  ctDraw();
+}
+async function ctUpload(e){
+  const f = e.target.files[0]; if (!f) return;
+  try { const bytes = await f.arrayBuffer(); CT = { src: await readSource(new File([bytes], f.name)), name: f.name, loaded: Date.now(), q: "", mode: "any", sheet: "", off: new Set() }; ctIndex();
+    if (!CT.rows.length) { CT = null; return showModal("No contacts found", "<p>No sheet in that file has a header row with names and emails.</p>", [["OK",null,true]]); }
+    await IDB.put("files", { key: "contacts", name: f.name, bytes, loaded: CT.loaded }); pageContacts(); toast(`${CT.rows.length} contacts loaded`); }
+  catch(err) { showModal("Couldn't read that file", `<p>${esc(err.message || err)}</p>`, [["OK",null,true]]); }
+}
+function ctIndex(){
+  const rows = []; const seen = new Map();
+  for (const sh of CT.src.sheets) {
+    if (sh.header < 0) continue;
+    const hdr = sh.rows[sh.header];
+    for (let ri = sh.header + 1; ri < sh.rows.length; ri++) {
+      const r = sh.rows[ri], m = sh.map, get = f => (f in m ? clean(r[m[f]]) : "");
+      let first = get("First Name"), sur = get("Surname"); if (first && !sur && !("Surname" in m)) { const p = first.split(" "); sur = p.pop(); first = p.join(" "); }
+      const email = get("Email"), org = get("Organisation");
+      if (!first && !sur && !email && !org) continue;
+      const rec = { sheet: sh.name, row: ri + 1, Title: get("Title"), First: first, Surname: sur, Position: get("Position"), Organisation: org, Country: /^country$/i.test(get("Country")) ? "" : get("Country"), Email: email, Phone: get("Phone"), Notes: get("Notes"), Met: get("Met"),
+        text: r.map(v => String(v)).join(" ").toLowerCase() + " " + sh.name.toLowerCase() };
+      const key = (first + sur).normalize("NFD").replace(/[^A-Za-z]/g,"").toLowerCase() || email.toLowerCase();
+      if (key && seen.has(key)) { const k = seen.get(key); for (const f of ["Title","Position","Organisation","Country","Email","Phone","Met"]) if (!k[f] && rec[f]) k[f] = rec[f]; k.text += " " + rec.text; k.sheets = (k.sheets || [k.sheet]).concat(rec.sheet); continue; }
+      rec.i = rows.length; rows.push(rec); if (key) seen.set(key, rec);
+    }
+  }
+  CT.rows = rows;
+}
+function ctMatches(){
+  const words = CT.q.toLowerCase().split(/[,;]+/).map(w => w.trim()).filter(Boolean);
+  return CT.rows.filter(r => (!CT.sheet || r.sheet === CT.sheet || (r.sheets || []).includes(CT.sheet)) && (!words.length || (CT.mode === "all" ? words.every(w => r.text.includes(w)) : words.some(w => r.text.includes(w)))));
+}
+function ctDraw(){
+  const m = ctMatches(), sel = m.filter(r => !CT.off.has(r.i)), shown = m.slice(0, 800);
+  $("#ctN").textContent = CT.q ? `${m.length} match${m.length===1?"":"es"} · ${sel.length} ticked` : `${m.length} contacts · ${sel.length} ticked`;
+  $("#ctRows").innerHTML = shown.map(r => `<tr><td><input type="checkbox" class="ctc" data-i="${r.i}" ${CT.off.has(r.i)?"":"checked"}></td><td>${esc([r.Title, r.First, r.Surname].filter(Boolean).join(" "))}</td><td>${esc(r.Organisation)}</td><td class="small">${esc(r.Position)}</td><td class="small">${esc(r.Country)}</td><td class="small">${esc(r.Email)}</td><td class="small muted">${esc(r.Met || "")}${r.Met ? "<br>" : ""}${esc((r.sheets || [r.sheet]).join(", "))}</td></tr>`).join("") +
+    (m.length > shown.length ? `<tr><td colspan="7" class="muted small" style="padding:12px">Showing 800 of ${m.length}. All ${sel.length} ticked are included in the download.</td></tr>` : "") || `<tr><td colspan="7" class="muted" style="padding:20px">No matches. Try fewer or different words.</td></tr>`;
+  document.querySelectorAll(".ctc").forEach(cb => cb.onchange = () => { cb.checked ? CT.off.delete(+cb.dataset.i) : CT.off.add(+cb.dataset.i); const n = ctMatches().filter(r => !CT.off.has(r.i)).length; $("#ctN").textContent = `${ctMatches().length} matches · ${n} ticked`; });
+  $("#ctX").disabled = !sel.length; if ($("#ctA")) $("#ctA").disabled = !sel.length;
+}
+async function ctExport(){
+  const sel = ctMatches().filter(r => !CT.off.has(r.i));
+  const aoa = [["Title","First Name","Surname","Position","Organisation","Country","Email","Phone","Notes","Met at","From sheet"]].concat(sel.map(r => [r.Title, r.First, r.Surname, r.Position, r.Organisation, r.Country, r.Email, r.Phone, r.Notes, r.Met, (r.sheets || [r.sheet]).join(", ")]));
+  const ws = XLSX.utils.aoa_to_sheet(aoa); ws["!cols"] = [8,16,18,30,34,14,32,16,30,30,18].map(w => ({wch:w}));
+  const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Contacts");
+  const words = CT.q.split(/[,;]+/).map(w => w.trim()).filter(Boolean).slice(0,3).join("_").replace(/[^A-Za-z0-9_]+/g,"") || "all";
+  const name = `Contacts_${words}_${new Date().toISOString().slice(0,10)}.xlsx`;
+  if (await download(new Blob([XLSX.write(wb, {bookType:"xlsx", type:"array"})], {type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}), name))
+    toast(`Downloaded <b>${esc(name)}</b> (${sel.length} contacts). Import it into an event under <b>Add guests</b>.`, 6000);
+}
+async function ctAddToEvent(){
+  const sel = new Set(ctMatches().filter(r => !CT.off.has(r.i)).map(r => r.sheet + "#" + r.row));
+  ADD = { ...CT.src, fileName: CT.name, mode: "contacts", useColours: true, q:"", fSheet:"", fCat:"", fCountry:"", fMet:"", hideDup:true, showAll:false };
+  ADD.sheets.forEach(s => s.use = s.header >= 0);
+  buildCandidates();
+  let n = 0; for (const c of ADD.cands) { c.pick = !c.dup && sel.has(c.sheet + "#" + c.row); if (c.pick) n++; }
+  go("add"); toast(`${n} ticked. Check them, then click <b>Add ${n} to the event</b>.`, 6000);
+}
+
+/* ---------- NEW EVENT (form + Word upload) ---------- */
+const _pageNewEventBase = pageNewEvent;
+pageNewEvent = function(){
+  _pageNewEventBase();
+  head(S ? `<a data-go="home">Home</a> ›` : `<a data-go="home">Home</a> ›`, "New event", "Answer these, upload or type the letter, and the Hub creates the event's file.");
+  const bodyLabel = document.querySelector('#ne [data-f="body"]').closest("label");
+  bodyLabel.insertAdjacentHTML("beforebegin", `<div class="full big-drop" style="grid-column:1/-1;padding:14px"><b>Already drafted the letter in Word?</b> <label class="fchip on" style="cursor:pointer;margin-left:8px">Upload it<input type="file" id="neUp" accept=".docx" class="hide"></label><div class="small muted" style="margin-top:4px">Fills in the date, heading, text and signatory below for you to check.</div></div>`);
+  $("#neUp").onchange = async e => { const f = e.target.files[0]; if (!f) return;
+    try { const u = parseLetter(await readDocx(f)); const set = (k, v) => { if (v) document.querySelector(`#ne [data-f="${k}"]`).value = v; };
+      set("ldate", u.date); set("heading", u.heading); set("body", u.body); set("sig", u.sig); const l = guessLang(u); document.querySelector('#ne [data-f="lang"]').value = l;
+      toast(`Read "${esc(f.name)}": check the letter fields below`, 5000); }
+    catch(err) { showModal("Couldn't read that file", `<p>${esc(err.message || err)}</p>`, [["OK",null,true]]); } };
 };
-function helpBox(k){
-  const h = HELP[k]; if (!h) return "";
-  let hidden = false; try { hidden = localStorage.getItem("awepHelpHide_" + k) === "1"; } catch(e){}
-  if (hidden) return `<div style="text-align:right;margin:-4px 0 6px"><button class="ghost small" onclick="try{localStorage.removeItem('awepHelpHide_${k}')}catch(e){};draw()">? How this page works</button></div>`;
-  return `<div class="helpbox"><span class="hi">i</span><div>${h.map(x => `<div>${x}</div>`).join("")}</div><button class="ghost small" title="Hide this tip" onclick="try{localStorage.setItem('awepHelpHide_${k}','1')}catch(e){};draw()">Got it</button></div>`;
+
+/* ---------- ACTIVITY / DETAILS / SOON ---------- */
+function pageActivity(){
+  head(`${evCrumb()} ›`, "Activity", "Every approval, edit, email and send, with who and when.");
+  const rows = sheetRows("Send Log").slice(1).filter(r => r.some(v => clean(v)));
+  const all = [...rows.map(r => r.map(clean)), ...S.newLog].reverse();
+  $("#page").innerHTML = `<div class="tablebox"><table><thead><tr><th>When</th><th>What</th><th>Guest</th><th>Email</th><th>By</th><th>Note</th></tr></thead><tbody>${all.map(r => `<tr><td class="small">${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[3])}</td><td class="small">${esc(r[4])}</td><td>${esc(r[6])}</td><td class="small">${esc(r[7])}</td></tr>`).join("") || `<tr><td colspan="6" class="muted" style="padding:20px">Nothing yet.</td></tr>`}</tbody></table></div>`;
+}
+function pageDetails(){
+  head(`${evCrumb()} ›`, "Event details", "As entered when the event was created.");
+  $("#page").innerHTML = `<div class="card"><div class="kv" style="grid-template-columns:230px 1fr">${Object.entries(S.brief).filter(([,v]) => v).map(([k,v]) => `<div>${esc(k)}</div><div style="white-space:pre-wrap">${esc(v)}</div>`).join("")}</div>
+    <p class="small muted">File: ${esc(S.fileName)}. To change these details, edit the "Event Brief" sheet in the file.</p></div>`;
+}
+function pageSoon(k){
+  const [t, d] = SOON[k];
+  head(S ? `${evCrumb()} ›` : "", t, "Coming soon for every event.");
+  $("#page").innerHTML = `<div class="card" style="max-width:720px"><span class="chip c-approval">Planned</span><p>${esc(d)}</p><p class="muted small">It will work from the same event file, under each event.</p></div>`;
 }
 
-/* ---------- quick tour ---------- */
-const TOUR = [
-  ["Welcome to the AWEP Events Hub", "It prepares personalised invitation letters and Outlook emails for an event, checks names, titles and emails for mistakes, and makes sure nobody is invited twice. Four steps:"],
-  ["1 · Open or create the event", "Each event has one Excel file (the <b>event workbook</b>) that stores everything. Click <b>New event</b> to make one, or <b>Open workbook</b> (bottom left) to continue one."],
-  ["2 · Add guests", "Import the event's guest list or pick people from the AWEP contact list. Duplicates and people already sent a letter are handled for you."],
-  ["3 · Review & approve", "Check each person's letter, correct their name, email or language right there, and approve. <b>Approving doesn't send anything.</b>"],
-  ["4 · Send letters", "The Hub creates one Outlook email per approved guest with their letter attached. Open each, press Send in Outlook, then tick <b>Mark as sent</b> so they can never get a second letter."],
-  ["Always type your name", "Your name (bottom left) is recorded against every approval and send. Everything saves into the workbook automatically in Edge or Chrome."]
-];
-function tour(i = 0){
-  const [t, b] = TOUR[i];
-  showModal(esc(t), `<p>${b}</p><div class="small muted">${i + 1} of ${TOUR.length}</div>`,
-    [["Skip tour", () => { try { localStorage.setItem("awepTourDone","1"); } catch(e){} }], ...(i ? [["Back", () => tour(i - 1)]] : []),
-     [i < TOUR.length - 1 ? "Next" : "Start", () => { if (i < TOUR.length - 1) tour(i + 1); else { try { localStorage.setItem("awepTourDone","1"); } catch(e){} } }, true]]);
+/* ---------- modal helpers ---------- */
+function showModal(title, body, buttons){
+  $("#modal").style.maxWidth = "";
+  $("#modal").innerHTML = `<h3>${title}</h3>${body}<div class="actions">${buttons.map((b,i) => `<button data-i="${i}" class="${b[2]?"primary":""}">${b[0]}</button>`).join("")}</div>`;
+  $("#modalBack").classList.add("show");
+  $("#modal").querySelectorAll(".actions button").forEach(btn => btn.onclick = async () => { const fn = buttons[+btn.dataset.i][1]; closeModal(); if (fn) await fn(); });
 }
+function closeModal(){ $("#modalBack").classList.remove("show"); }
+function confirmModal(title, body, yes){ return new Promise(res => showModal(title, body, [["Cancel", () => res(false)], [yes, () => res(true), true]])); }
 
-draw();
-try { if (localStorage.getItem("awepTourDone") !== "1") setTimeout(() => tour(0), 400); } catch(e){}
+/* ---------- start ---------- */
+(async () => {
+  await loadRecent();
+  route = location.hash.slice(1) || "home"; if (isEventRoute(route)) route = "home";
+  draw();
+  if (!who() || !PREF.get("awepHubMail")) setTimeout(setup, 300);
+})();
+
 </script>
 </body>
 </html>
