@@ -150,6 +150,16 @@ details.more summary{cursor:pointer;color:var(--plum);font-weight:600}
 .big-drop{border:2px dashed #D9C3CF;border-radius:14px;padding:22px;background:#fff;text-align:center}
 .lang-cards{display:grid;gap:12px}
 .ok{color:var(--green);font-weight:600} .no{color:var(--amber);font-weight:600}
+/* protocol */
+.phase{background:#D9D9D9;font-weight:700;padding:9px 14px;color:#222;letter-spacing:.3px}
+.ptable td{vertical-align:top}
+.ptable tr.grp td{background:#F2E3FC;padding:7px 12px}
+.ptable textarea.cell{width:100%;border:1px solid transparent;background:transparent;padding:6px 7px;border-radius:7px;font:inherit;font-size:13.5px;resize:vertical;min-height:32px}
+.ptable textarea.cell:hover{border-color:var(--line);background:#fff} .ptable textarea.cell:focus{border-color:var(--plum);background:#fff;outline:none}
+.ptable tr.pdone td{opacity:.6}
+.dlbtn{border:1px solid var(--line);background:#fff;border-radius:7px;padding:4px 8px;font-size:13px;font-weight:600}
+.dlbtn.late{background:var(--red-bg);color:var(--red);border-color:#F3C4BF} .dlbtn.soon{background:var(--amber-bg);color:var(--amber);border-color:#F0D9A6}
+select.st-done{background:#E6F4EA!important;color:var(--green)} select.st-ongoing{background:#FFF4DC!important;color:var(--amber)} select.st-delayed{background:#FDECEA!important;color:var(--red)}
 /* modal */
 .modal-back{position:fixed;inset:0;background:rgba(40,20,32,.45);display:none;align-items:center;justify-content:center;z-index:50}
 .modal-back.show{display:flex}
@@ -1002,6 +1012,379 @@ function commitAdd(){
     }, true]]);
 }
 
+/* ================== Event protocol: model, reading, writing (same layout as the AWEP protocol sheets) ================== */
+const PROTO_SHEET = "Event Protocol";
+const PHASES = ["BEFORE THE EVENT", "DURING THE EVENT", "AFTER THE EVENT"];
+const PSTATUS = ["Not Started", "Ongoing", "Done", "Delayed", "Not needed"];
+const DAY = 864e5;
+const serialToDate = n => new Date(Math.round((n - 25569) * DAY));
+const dateToSerial = d => Math.round(d.getTime() / DAY) + 25569;
+const utcDate = (y, m, d) => new Date(Date.UTC(y, m, d));
+const fmtDate = (d, long) => d ? d.toLocaleDateString("en-GB", { day: "numeric", month: long ? "long" : "short", year: long ? "numeric" : "2-digit", timeZone: "UTC" }) : "";
+const todayUTC = () => { const n = new Date(); return utcDate(n.getFullYear(), n.getMonth(), n.getDate()); };
+
+function parseDeadline(cell, dateRef){
+  if (!cell) return { kind: "text", t: "" };
+  if (cell.f) {
+    const f = cell.f.replace(/\s+/g, "");
+    const ref = dateRef.replace(/\$/g, "");
+    const refRe = `\\$?${ref.replace(/(\d+)/, "\\$?$1")}`;
+    let m = f.match(new RegExp(`^${refRe}([+-]\\d+)?$`, "i"));
+    if (m) return { kind: "off", n: m[1] ? +m[1] : 0 };
+    m = cell.f.match(new RegExp(`^"([^"]*)"\\s*&\\s*TEXT\\(\\s*${refRe}\\s*([+-]\\s*\\d+)?\\s*,\\s*"([^"]*)"\\s*\\)$`, "i"));
+    if (m) return { kind: "fmt", prefix: m[1], n: m[2] ? +m[2].replace(/\s/g, "") : 0, fmt: m[3] };
+  }
+  if (cell.t === "n" && typeof cell.v === "number") return { kind: "date", d: serialToDate(cell.v) };
+  if (cell.v instanceof Date) return { kind: "date", d: cell.v };
+  return { kind: "text", t: String(cell.w ?? cell.v ?? "").trim() };
+}
+function readProtocol(ws, sheetName){
+  if (!ws || !ws["!ref"]) return null;
+  const range = XLSX.utils.decode_range(ws["!ref"]);
+  const merges = (ws["!merges"] || []);
+  const fullRow = r => merges.some(m => m.s.r === r && m.s.c === 0 && m.e.c >= 4);
+  const cell = (r, c) => ws[XLSX.utils.encode_cell({ r, c })];
+  const val = (r, c) => { const x = cell(r, c); return x ? String(x.w ?? x.v ?? "").trim() : ""; };
+  const P = { title: "", glance: [], date: null, dateNote: "", phases: [], footnote: "" };
+  let mode = "top", phase = null, dateRef = "B5";
+  for (let r = range.s.r; r <= range.e.r; r++) {
+    const a = val(r, 0); const rest = [1,2,3,4,5].map(c => val(r, c));
+    if (!a && rest.every(x => !x)) continue;
+    if (r === range.s.r && !P.title) { P.title = a; continue; }
+    if (/^event at a glance$/i.test(a)) { mode = "glance"; continue; }
+    const ph = PHASES.find(p => p === a.toUpperCase());
+    if (ph) { mode = "tasks"; phase = { name: ph, items: [] }; P.phases.push(phase); continue; }
+    if (/^task$/i.test(a)) continue;
+    if (mode === "glance") {
+      if (/event date/i.test(a)) { const x = cell(r, 1); dateRef = XLSX.utils.encode_cell({ r, c: 1 });
+        if (x && x.t === "n") P.date = serialToDate(x.v); else if (x && x.v instanceof Date) P.date = x.v; else if (x) { const d = new Date(val(r,1)); if (!isNaN(d)) P.date = utcDate(d.getFullYear(), d.getMonth(), d.getDate()); }
+        P.dateLabel = a; P.dateNote = rest.slice(1).filter(Boolean).join(" "); }
+      else P.glance.push({ label: a, value: rest.filter(Boolean).join(" ") });
+      continue;
+    }
+    if (mode === "tasks") {
+      if (!rest.some(Boolean) && (fullRow(r) || a.length < 60)) {
+        if (a.length > 90) { P.footnote = a; continue; }
+        phase.items.push({ type: "group", name: a }); continue;
+      }
+      phase.items.push({ type: "task", task: a, lead: [val(r,1), val(r,2)].filter(Boolean).join(" "), dl: parseDeadline(cell(r, 3), dateRef), status: val(r, 4) || "Not Started", comments: val(r, 5) });
+    }
+  }
+  if (sheetName && sheetName !== PROTO_SHEET) P.sheetName = sheetName;
+  return P.phases.length ? P : null;
+}
+function deadlineOf(t, P){
+  const dl = t.dl || { kind: "text", t: "" };
+  if (dl.kind === "off") return P.date ? new Date(P.date.getTime() + dl.n * DAY) : null;
+  if (dl.kind === "date") return dl.d;
+  return null;
+}
+function deadlineText(t, P){
+  const dl = t.dl || {};
+  if (dl.kind === "fmt") return `${dl.prefix}${P.date ? fmtDate(new Date(P.date.getTime() + dl.n * DAY)) : `${Math.abs(dl.n)} days ${dl.n < 0 ? "before" : "after"} the event`}`;
+  if (dl.kind === "text") return dl.t;
+  const d = deadlineOf(t, P);
+  return d ? fmtDate(d) : (dl.kind === "off" ? (dl.n === 0 ? "Event day" : `${Math.abs(dl.n)} days ${dl.n < 0 ? "before" : "after"}`) : "");
+}
+function relText(dl){ if (!dl) return ""; if (dl.kind === "off" || dl.kind === "fmt") return dl.n === 0 ? "event day" : `${Math.abs(dl.n)} day${Math.abs(dl.n) === 1 ? "" : "s"} ${dl.n < 0 ? "before" : "after"} the event`; if (dl.kind === "date") return "set date"; return ""; }
+
+/* ---------- the standard AWEP protocol (from the CSW71 / AFESTACC protocols, without event-specific notes) ---------- */
+function standardProtocol(){
+  const b = S.brief, T = (task, n, comments) => ({ type: "task", task, lead: "", dl: typeof n === "number" ? { kind: "off", n } : n, status: "Not Started", comments: comments || "" });
+  const G = name => ({ type: "group", name });
+  let date = null; const m = String(b["Event date"] || "").match(/(\d{1,2})(?:\s*[–-]\s*\d{1,2})?\s+([A-Za-z]+)\s+(\d{4})/);
+  if (m) { const d = new Date(`${m[1]} ${m[2]} ${m[3]} UTC`); if (!isNaN(d)) date = d; }
+  return {
+    title: `EVENT PROTOCOL: ${(b["Event name"] || "EVENT").toUpperCase()}`,
+    glance: [
+      { label: "Event", value: [b["Event name"], b["Nature of event"]].filter(Boolean).join(". ") },
+      { label: "Date and venue", value: [b["Event date"], b["City / venue"]].filter(Boolean).join(", ") },
+      { label: "Participants", value: b["Priority groups"] || "" },
+      { label: "Purpose", value: "" }, { label: "Expected outcomes", value: "" }, { label: "Contacts", value: "" }
+    ],
+    date, dateLabel: "Event date (planning assumption)", dateNote: "Change this date once the event is confirmed; every deadline on this sheet updates.",
+    phases: [
+      { name: "BEFORE THE EVENT", items: [
+        G("Administrative"), T("Finalise concept note (title, date, time, venue, co-hosts)", -90), T("Confirm event slot, room and time", -90), T("Confirm co-hosts and partners", -84),
+        T("Budget drafting", -84), T("Memo drafting for approval of participation and travel", -84), T("Create registration link", -77), T("Visa support and note verbales for travelling delegates", -77),
+        T("Travel bookings and accommodation for AUDA-NEPAD team, speakers and sponsored participants", -63), T("Coordination meetings", { kind: "fmt", prefix: "Weekly from ", n: -84, fmt: "d mmm yy" }),
+        G("Invitations and participants"), T("Build invitation list by participant group", -84), T("Save the date to all participant groups", -84), T("Invite Member States and senior officials", -77),
+        T("Invite UN entities, development partners and financing institutions", -77), T("Invite civil society, private sector, youth and other participant groups", -77),
+        T("Manage RSVPs; confirm final participant list", -35, "Send reminders and confirm attendance of senior officials in particular."),
+        G("Programme content"), T("Draft detailed agenda and run-of-show", -63), T("Confirm speakers and moderator", -77), T("Prepare background brief", -49), T("Prepare a way to capture commitments on the day", -35),
+        T("Prepare talking points and remarks for AUDA-NEPAD leadership", -42), T("Develop moderator and speaker briefs", -42), T("Master presentation template", -42), T("Receive presentations from speakers", -14),
+        G("Conferencing and logistics"), T("Room set-up: layout, microphones, projection, sound, internet and interpretation", -35), T("Catering and refreshments", -42),
+        T("Protocol arrangements for dignitaries: reception, seating plan, order of speakers", -35), T("Design of conference materials with AWEP branding (roll-up banners, backdrop, table tents, badges)", -49),
+        T("Printing of concept note, agenda, briefs and registration list", -14),
+        G("Comms, marketing and branding"), T("Comms content and roadmap", -63), T("Social media campaign", -42), T("Coordinate with AUC and partner communications teams", -35),
+        T("Draft AUDA-NEPAD media advisory", -35), T("Photography and videography", -35), T("Arrange interviews with journalists and TV", -21)
+      ]},
+      { name: "DURING THE EVENT", items: [
+        G("Registration and attendance"), T("Registration desk and attendance list", 0), T("Reception and escort of dignitaries and senior officials", 0),
+        G("Session management"), T("Moderators, microphone handling and timekeeping", 0), T("Capture commitments from participants", 0, "Each commitment names an owner and a date."),
+        G("Reporting"), T("Assign note-takers and rapporteurs", 0), T("Live social media updates", 0), T("Photography and videography coverage", 0), T("Debrief with the team at the end of the event", 0)
+      ]},
+      { name: "AFTER THE EVENT", items: [
+        T("Thank-you letters and emails to speakers, participants and partners", 7), T("Publish event summary and press release", 7), T("Feedback survey design and dissemination", 7),
+        T("Consolidate commitments and circulate the outcome document", 14), T("Event report", 21), T("Report through AUDA-NEPAD and African Union channels", { kind: "text", t: "After the event" })
+      ]}
+    ],
+    footnote: "Lead Person/Team is left blank for you to fill in. Deadlines are calculated from the event date in the yellow cell near the top, so change that cell once the date is confirmed. Deadlines that already fall in the past mean the task needs to happen immediately."
+  };
+}
+
+/* ---------- writing the sheet (exact AWEP protocol layout) ---------- */
+const XNS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+const RNS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+function xmlEsc(s){ return String(s ?? "").replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c])).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, ""); }
+function styleKit(doc){
+  const ser = n => new XMLSerializer().serializeToString(n).replace(/\s+xmlns="[^"]*"/g, "");
+  const frag = xml => new DOMParser().parseFromString(`<x xmlns="${XNS}">${xml}</x>`, "application/xml").documentElement.firstElementChild;
+  const list = tag => { let el = doc.getElementsByTagNameNS(XNS, tag)[0]; if (!el) { el = doc.createElementNS(XNS, tag); const ss = doc.documentElement; const order = ["numFmts","fonts","fills","borders","cellStyleXfs","cellXfs"]; const after = order.slice(order.indexOf(tag) + 1).map(t => doc.getElementsByTagNameNS(XNS, t)[0]).find(Boolean); ss.insertBefore(el, after || null); } return el; };
+  const ensure = (tag, item, xml) => {
+    const L = list(tag), want = ser(frag(xml)), kids = [...L.children];
+    let i = kids.findIndex(k => ser(k) === want);
+    if (i < 0) { L.appendChild(doc.importNode(frag(xml), true)); i = kids.length; L.setAttribute("count", String(kids.length + 1)); }
+    return i;
+  };
+  const numFmt = code => {
+    if (!code) return 0;
+    const L = list("numFmts"); const ex = [...L.children].find(k => k.getAttribute("formatCode") === code);
+    if (ex) return +ex.getAttribute("numFmtId");
+    const id = Math.max(163, ...[...L.children].map(k => +k.getAttribute("numFmtId"))) + 1;
+    const el = doc.createElementNS(XNS, "numFmt"); el.setAttribute("numFmtId", id); el.setAttribute("formatCode", code); L.appendChild(el); L.setAttribute("count", String(L.children.length));
+    return id;
+  };
+  const cache = {};
+  return function xf(key, o){
+    if (cache[key] !== undefined) return cache[key];
+    const font = ensure("fonts", "font", `<font>${o.b ? "<b/>" : ""}<sz val="11"/><color rgb="FF${o.color || "000000"}"/><name val="Arial"/><family val="2"/></font>`);
+    const fill = o.fill ? ensure("fills", "fill", `<fill><patternFill patternType="solid"><fgColor rgb="FF${o.fill}"/><bgColor indexed="64"/></patternFill></fill>`) : 0;
+    const bs = o.border || "";
+    const border = bs ? ensure("borders", "border", `<border><left style="${bs}"><color auto="1"/></left><right style="${bs}"><color auto="1"/></right><top style="${bs}"><color auto="1"/></top><bottom style="${bs}"><color auto="1"/></bottom><diagonal/></border>`) : 0;
+    const nf = numFmt(o.numFmt);
+    const al = `<alignment${o.h ? ` horizontal="${o.h}"` : ""} vertical="${o.v || "center"}"${o.wrap ? ` wrapText="1"` : ""}/>`;
+    return cache[key] = ensure("cellXfs", "xf", `<xf numFmtId="${nf}" fontId="${font}" fillId="${fill}" borderId="${border}" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"${nf ? ` applyNumberFormat="1"` : ""}>${al}</xf>`);
+  };
+}
+const PSTYLE = {
+  title: { b:1, h:"left" }, phase: { b:1, fill:"D9D9D9", border:"medium", h:"center" },
+  gl: { b:1, fill:"FFFFFF", border:"thin", h:"left", v:"top", wrap:1 }, gv: { fill:"FFFFFF", border:"thin", h:"left", v:"top", wrap:1 },
+  date: { b:1, color:"0000FF", fill:"FFFF00", border:"thin", h:"center", numFmt:"d\\ mmm\\ yyyy" }, dnote: { fill:"FFFFFF", border:"thin", h:"left", v:"top", wrap:1 },
+  head: { b:1, color:"FFFFFF", fill:"BC72F0", border:"thin", h:"center" }, group: { b:1, fill:"F2E3FC", border:"thin", h:"left" },
+  task: { b:1, fill:"FFFFFF", border:"thin", h:"left", v:"top", wrap:1 }, lead: { b:1, fill:"FFFFFF", border:"thin", h:"left", v:"top", wrap:1 },
+  dl: { fill:"FFFFFF", border:"thin", h:"center", v:"top", wrap:1, numFmt:"d-mmm-yy" }, dlt: { fill:"FFFFFF", border:"thin", h:"center", v:"top", wrap:1 },
+  st: { b:1, fill:"FFFFFF", border:"thin", h:"center", v:"top", wrap:1 }, stDone: { b:1, fill:"C6EFCE", border:"thin", h:"center", v:"top", wrap:1 },
+  stOn: { b:1, fill:"FFEB9C", border:"thin", h:"center", v:"top", wrap:1 }, stLate: { b:1, fill:"FFC7CE", border:"thin", h:"center", v:"top", wrap:1 },
+  com: { fill:"FFFFFF", border:"thin", h:"left", v:"top", wrap:1 }, foot: { fill:"FFFFFF", border:"thin", h:"left", v:"top", wrap:1 }
+};
+function protocolSheetXml(P, stylesDoc){
+  const xf = styleKit(stylesDoc), s = k => xf(k, PSTYLE[k]);
+  const W = [61.4, 19, 16.7, 13, 12, 62];
+  const rows = [], merges = [];
+  let r = 0;
+  const lines = (txt, w) => String(txt || "").split("\n").reduce((n, l) => n + Math.max(1, Math.ceil(l.length * 1.12 / w)), 0);
+  const row = (cells, h) => { r++; rows.push(`<row r="${r}"${h ? ` ht="${h}" customHeight="1"` : ""}>${cells.join("")}</row>`); return r; };
+  const str = (c, v, st) => `<c r="${c}${r + 1}" s="${st}"${v !== "" && v != null ? ` t="inlineStr"><is><t xml:space="preserve">${xmlEsc(v)}</t></is></c>` : "/>"}`;
+  const blankRow = st => ["B","C","D","E","F"].map(c => `<c r="${c}${r + 1}" s="${st}"/>`);
+  const full = (text, st, h) => { merges.push(`A${r + 1}:F${r + 1}`); row([str("A", text, st), ...blankRow(st)], h); };
+  row([str("A", P.title, s("title"))], 18.65);
+  full("EVENT AT A GLANCE", s("phase"), 18.65);
+  let dateCell = null;
+  const glanceRows = [...P.glance];
+  const dateIdx = Math.min(2, glanceRows.length);
+  const writeGlance = g => { const h = Math.max(18.65, 15 * Math.max(lines(g.label, W[0]), lines(g.value, W.slice(1).reduce((a,b)=>a+b)))+ 4); merges.push(`B${r + 1}:F${r + 1}`); row([str("A", g.label, s("gl")), str("B", g.value, s("gv")), ...["C","D","E","F"].map(c => `<c r="${c}${r + 1}" s="${s("gv")}"/>`)], h); };
+  glanceRows.slice(0, dateIdx).forEach(writeGlance);
+  { dateCell = `B${r + 1}`; merges.push(`C${r + 1}:F${r + 1}`);
+    const v = P.date ? `<c r="B${r + 1}" s="${s("date")}"><v>${dateToSerial(P.date)}</v></c>` : `<c r="B${r + 1}" s="${s("date")}"/>`;
+    row([str("A", P.dateLabel || "Event date (planning assumption)", s("gl")), v, str("C", P.dateNote, s("dnote")), ...["D","E","F"].map(c => `<c r="${c}${r + 1}" s="${s("dnote")}"/>`)], Math.max(36, 15 * lines(P.dateNote, W.slice(2).reduce((a,b)=>a+b)) + 4)); }
+  glanceRows.slice(dateIdx).forEach(writeGlance);
+  const abs = dateCell.replace(/([A-Z]+)(\d+)/, "$$$1$$$2");
+  P.phases.forEach((ph, pi) => {
+    full(ph.name, s("phase"), 18.65);
+    if (pi === 0) row([str("A", "Task", s("head")), str("B", "Lead Person/Team", s("head")), `<c r="C${r + 1}" s="${s("head")}"/>`, str("D", "Deadline", s("head")), str("E", "Status", s("head")), str("F", "Comments", s("head"))], 18.65);
+    for (const it of ph.items) {
+      if (it.type === "group") { full(it.name, s("group"), 16.5); continue; }
+      const dl = it.dl || { kind: "text", t: "" }; let dcell;
+      const n = dl.n || 0, sign = n < 0 ? "-" : "+", off = n ? `${sign}${Math.abs(n)}` : "";
+      if (dl.kind === "off") dcell = `<c r="D${r + 1}" s="${s("dl")}"><f>${abs}${off}</f>${P.date ? `<v>${dateToSerial(P.date) + n}</v>` : ""}</c>`;
+      else if (dl.kind === "fmt") dcell = `<c r="D${r + 1}" s="${s("dlt")}" t="str"><f>"${xmlEsc(dl.prefix)}"&amp;TEXT(${abs}${off},"${xmlEsc(dl.fmt || "d mmm yy")}")</f><v>${xmlEsc(deadlineText(it, P))}</v></c>`;
+      else if (dl.kind === "date") dcell = `<c r="D${r + 1}" s="${s("dl")}"><v>${dateToSerial(dl.d)}</v></c>`;
+      else dcell = str("D", dl.t, s("dlt"));
+      const stKey = /^done$/i.test(it.status) ? "stDone" : /^ongoing$/i.test(it.status) ? "stOn" : /^delayed$/i.test(it.status) ? "stLate" : "st";
+      const h = Math.max(18.65, 15 * Math.max(lines(it.task, W[0]), lines(it.comments, W[5]), lines(it.lead, W[1] + W[2])) + 4);
+      row([str("A", it.task, s("task")), str("B", it.lead, s("lead")), `<c r="C${r + 1}" s="${s("lead")}"/>`, dcell, str("E", it.status, s(stKey)), str("F", it.comments, s("com"))], h);
+    }
+  });
+  if (P.footnote) { row([]); full(P.footnote, s("foot"), Math.max(36, 15 * lines(P.footnote, W.reduce((a,b)=>a+b)) + 4)); }
+  const firstTask = rows.findIndex(x => /<c r="A\d+"[^>]*><is><t xml:space="preserve">Task</) + 2;
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="${XNS}" xmlns:r="${RNS}"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><dimension ref="A1:F${r}"/><sheetViews><sheetView workbookViewId="0"/></sheetViews><sheetFormatPr defaultRowHeight="16.5"/>
+<cols>${W.map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join("")}</cols>
+<sheetData>${rows.join("")}</sheetData>
+<mergeCells count="${merges.length}">${merges.map(m => `<mergeCell ref="${m}"/>`).join("")}</mergeCells>
+<dataValidations count="1"><dataValidation type="list" allowBlank="1" showErrorMessage="0" sqref="E${Math.max(firstTask, 1)}:E${r}"><formula1>"${PSTATUS.join(",")}"</formula1></dataValidation></dataValidations>
+<pageMargins left="0.4" right="0.4" top="0.5" bottom="0.5" header="0.3" footer="0.3"/><pageSetup orientation="landscape" fitToHeight="0"/></worksheet>`;
+}
+async function writeProtocolToZip(zip, P, sheetName){
+  const stylesDoc = new DOMParser().parseFromString(await zip.file("xl/styles.xml").async("string"), "application/xml");
+  const xml = protocolSheetXml(P, stylesDoc);
+  zip.file("xl/styles.xml", new XMLSerializer().serializeToString(stylesDoc));
+  const paths = await sheetPaths(zip);
+  let path = paths[sheetName];
+  if (!path) {
+    const wbDoc = new DOMParser().parseFromString(await zip.file("xl/workbook.xml").async("string"), "application/xml");
+    const relDoc = new DOMParser().parseFromString(await zip.file("xl/_rels/workbook.xml.rels").async("string"), "application/xml");
+    const ctDoc = new DOMParser().parseFromString(await zip.file("[Content_Types].xml").async("string"), "application/xml");
+    const used = Object.values(paths).map(p => +(p.match(/sheet(\d+)\.xml$/) || [0, 0])[1]);
+    const n = Math.max(0, ...used) + 1; path = `xl/worksheets/sheet${n}.xml`;
+    const rels = [...relDoc.getElementsByTagName("Relationship")];
+    let rid = rels.length + 1; while (rels.some(x => x.getAttribute("Id") === `rId${rid}`)) rid++;
+    const rel = relDoc.createElementNS(relDoc.documentElement.namespaceURI, "Relationship");
+    rel.setAttribute("Id", `rId${rid}`); rel.setAttribute("Type", "http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet"); rel.setAttribute("Target", `worksheets/sheet${n}.xml`);
+    relDoc.documentElement.appendChild(rel);
+    const sheets = wbDoc.getElementsByTagNameNS(XNS, "sheets")[0];
+    const ids = [...sheets.getElementsByTagNameNS(XNS, "sheet")].map(x => +x.getAttribute("sheetId"));
+    const sh = wbDoc.createElementNS(XNS, "sheet"); sh.setAttribute("name", sheetName); sh.setAttribute("sheetId", String(Math.max(0, ...ids) + 1)); sh.setAttributeNS(RNS, "r:id", `rId${rid}`);
+    sheets.appendChild(sh);
+    const ov = ctDoc.createElementNS(ctDoc.documentElement.namespaceURI, "Override");
+    ov.setAttribute("PartName", `/${path}`); ov.setAttribute("ContentType", "application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml");
+    ctDoc.documentElement.appendChild(ov);
+    zip.file("xl/workbook.xml", new XMLSerializer().serializeToString(wbDoc));
+    zip.file("xl/_rels/workbook.xml.rels", new XMLSerializer().serializeToString(relDoc));
+    zip.file("[Content_Types].xml", new XMLSerializer().serializeToString(ctDoc));
+  }
+  zip.file(path, xml);
+  return path;
+}
+async function protocolStandaloneBlob(P){
+  const zip = new JSZip();
+  zip.file("[Content_Types].xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`);
+  zip.file("_rels/.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`);
+  zip.file("xl/workbook.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="${XNS}" xmlns:r="${RNS}"><sheets></sheets></workbook>`);
+  zip.file("xl/_rels/workbook.xml.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdS" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`);
+  zip.file("xl/styles.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="${XNS}"><fonts count="1"><font><sz val="11"/><name val="Arial"/><family val="2"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`);
+  const name = (P.sheetName || (S && S.brief["Event name"]) || "Event protocol").replace(/[\\\/\?\*\[\]:]/g, " ").replace(/\s+/g, " ").slice(0, 31).trim() || "Event protocol";
+  await writeProtocolToZip(zip, P, name);
+  return zip.generateAsync({ type: "blob", mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+}
+
+/* ---------- Protocol page ---------- */
+let PR = { f: "all", q: "" };
+function markProto(note){ S.protoDirty = true; S.dirty = true; if (note) log(note, null); autoSave(); }
+function isoDate(d){ return d ? d.toISOString().slice(0, 10) : ""; }
+function protoTasks(P){ const out = []; P.phases.forEach((ph, pi) => ph.items.forEach((it, ii) => { if (it.type === "task") out.push({ it, pi, ii }); })); return out; }
+function protoState(it, P){
+  const d = deadlineOf(it, P), t = todayUTC(), closed = /^(done|not needed)$/i.test(it.status);
+  return { d, closed, overdue: !!d && d < t && !closed, week: !!d && !closed && d >= t && d <= new Date(t.getTime() + 7 * DAY) };
+}
+function protoCounts(P){
+  const ts = protoTasks(P), me = (who() || "").toLowerCase();
+  const c = { all: ts.length, done: 0, overdue: 0, week: 0, open: 0, mine: 0 };
+  for (const { it } of ts) { const s = protoState(it, P); if (s.closed) c.done++; else c.open++; if (s.overdue) c.overdue++; if (s.week) c.week++; if (me && it.lead.toLowerCase().includes(me)) c.mine++; }
+  return c;
+}
+async function uploadProtocol(file){
+  try {
+    const wb = XLSX.read(new Uint8Array(await file.arrayBuffer()), { type: "array", nodim: true, cellFormula: true });
+    const name = wb.SheetNames.find(n => XLSX.utils.sheet_to_json(wb.Sheets[n], { header: 1, defval: "" }).some(r => /^event at a glance$/i.test(String(r[0]).trim()))) || wb.SheetNames[0];
+    const P = readProtocol(wb.Sheets[name], name);
+    if (!P) return showModal("That doesn't look like an event protocol", "<p>The sheet needs the usual layout: an EVENT AT A GLANCE block, then BEFORE / DURING / AFTER THE EVENT with Task, Lead Person/Team, Deadline, Status and Comments columns.</p>", [["OK", null, true]]);
+    if (S.protocol && !(await confirmModal("Replace this event's protocol?", `<p>The current protocol (${protoTasks(S.protocol).length} tasks) will be replaced by the one in <b>${esc(file.name)}</b> (${protoTasks(P).length} tasks).</p>`, "Replace"))) return;
+    S.protocol = P; markProto(`Protocol uploaded (${file.name})`); pageProtocol();
+    toast(`Protocol added: ${protoTasks(P).length} tasks${P.date ? ", event date " + fmtDate(P.date, true) : ""}.`, 5000);
+  } catch(e) { showModal("Couldn't read that file", `<p>${esc(e.message || e)}</p>`, [["OK", null, true]]); }
+}
+function pageProtocol(){
+  head(`${evCrumb()} ›`, "Protocol", "The event's task plan: who does what, by when. Deadlines move with the event date.");
+  const P = S.protocol;
+  if (!P) {
+    $("#page").innerHTML = `<div class="grid2">
+      <div class="card"><h3 class="h">Upload a protocol</h3><p class="muted">Already have this event's protocol in Excel (like the CSW71 or AFESTACC protocols)? Upload it and it becomes part of this event.</p><label class="fchip on" style="cursor:pointer;display:inline-block;padding:9px 18px">Upload protocol (Excel)<input type="file" id="prUp" accept=".xlsx,.xls" class="hide"></label></div>
+      <div class="card"><h3 class="h">Start from the standard AWEP protocol</h3><p class="muted">About 50 tasks before, during and after the event, with deadlines counted back from the event date. Edit, add or remove anything.</p><button class="primary" id="prStd">Use the standard protocol</button></div></div>`;
+    $("#prUp").onchange = e => { if (e.target.files[0]) uploadProtocol(e.target.files[0]); };
+    $("#prStd").onclick = () => { if (!needName()) return; S.protocol = standardProtocol(); markProto("Standard protocol added"); pageProtocol(); };
+    return;
+  }
+  $("#topActions").innerHTML = `<label class="fchip" style="cursor:pointer" title="Replace with a protocol from Excel">Upload a newer protocol<input type="file" id="prUp" accept=".xlsx,.xls" class="hide"></label> <button class="primary" id="prDl">⬇ Download as Excel</button>`;
+  $("#prUp").onchange = e => { if (e.target.files[0]) uploadProtocol(e.target.files[0]); };
+  $("#prDl").onclick = async () => { const name = `${(S.brief["Event name"] || "Event").replace(/[^A-Za-z0-9]+/g, "_").slice(0, 50)}_Event_Protocol.xlsx`; if (await download(await protocolStandaloneBlob(P), name)) toast(`Downloaded <b>${esc(name)}</b>`); };
+  const c = protoCounts(P), pct = c.all ? Math.round(c.done / c.all * 100) : 0;
+  const leads = [...new Set(protoTasks(P).map(x => x.it.lead).filter(Boolean))];
+  const chip = (k, l, n, cls) => `<span class="fchip ${PR.f === k ? "on" : ""}" data-pf="${k}">${l} · ${n}</span>`;
+  let h = `<div class="card" style="display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;margin-bottom:12px">
+      <label class="small muted" style="display:flex;flex-direction:column;gap:4px">Event date (every deadline counts from it)<input type="date" id="prDate" value="${isoDate(P.date)}" style="font-size:15px;font-weight:600;background:#FFFDE6"></label>
+      <div><div class="small muted">${c.done} of ${c.all} tasks done</div><div style="height:10px;border-radius:6px;background:var(--soft);overflow:hidden;margin-top:5px"><div style="height:100%;width:${pct}%;background:var(--plum)"></div></div>
+        <div class="small" style="margin-top:6px">${c.overdue ? `<b style="color:var(--red)">${c.overdue} overdue</b> · ` : ""}${c.week ? `<b style="color:var(--amber)">${c.week} due in the next 7 days</b> · ` : ""}${P.date ? `Event in ${Math.round((P.date - todayUTC()) / DAY)} days` : `<span class="no">Set the event date so deadlines can be worked out</span>`}</div></div>
+      <div class="small muted" style="max-width:260px">${esc(P.dateNote || "")}</div></div>
+    <div class="toolbar"><div class="chips" style="margin:0">${chip("all","All tasks",c.all)}${chip("overdue","Overdue",c.overdue)}${chip("week","Due this week",c.week)}${chip("open","Not done",c.open)}${who() ? chip("mine","Mine",c.mine) : ""}</div><div class="spacer"></div><input type="text" id="prQ" placeholder="Search tasks…" value="${esc(PR.q)}" style="width:220px"></div>
+    <details class="card" style="margin-bottom:12px" id="prGl"><summary style="cursor:pointer;font-weight:600;color:var(--aub)">Event at a glance</summary><div class="form" style="margin-top:10px">
+      <label class="full">Protocol title<input type="text" data-gt="title" value="${esc(P.title)}"></label>
+      ${P.glance.map((g, i) => `<label class="full">${esc(g.label)}<textarea data-gi="${i}" rows="${Math.min(6, Math.max(2, Math.ceil(g.value.length / 110)))}">${esc(g.value)}</textarea></label>`).join("")}
+      <label class="full">Note beside the event date<input type="text" data-gt="dateNote" value="${esc(P.dateNote)}"></label></div></details>`;
+  const q = PR.q.toLowerCase(), me = (who() || "").toLowerCase();
+  const show = it => { const s = protoState(it, P); if (q && ![it.task, it.lead, it.comments].join(" ").toLowerCase().includes(q)) return false;
+    return PR.f === "all" || (PR.f === "overdue" && s.overdue) || (PR.f === "week" && s.week) || (PR.f === "open" && !s.closed) || (PR.f === "mine" && me && it.lead.toLowerCase().includes(me)); };
+  P.phases.forEach((ph, pi) => {
+    let body = "", groupBuf = "", groupHead = "", any = false, gIdx = -1;
+    const flush = () => { if (groupBuf || (PR.f === "all" && !q && groupHead)) body += groupHead + groupBuf; groupBuf = ""; groupHead = ""; };
+    ph.items.forEach((it, ii) => {
+      if (it.type === "group") { flush(); gIdx = ii; groupHead = `<tr class="grp"><td colspan="6"><b>${esc(it.name)}</b> <button class="ghost small" data-addt="${pi}:${ii}">+ Add task</button></td></tr>`; return; }
+      if (!show(it)) return; any = true;
+      const s = protoState(it, P);
+      groupBuf += `<tr class="${s.closed ? "pdone" : ""}" data-p="${pi}:${ii}">
+        <td><textarea class="cell" data-pk="task" rows="${Math.max(1, Math.ceil(it.task.length / 55))}">${esc(it.task)}</textarea></td>
+        <td><input class="cell" data-pk="lead" value="${esc(it.lead)}" list="prLeads" placeholder="Who?"></td>
+        <td style="white-space:nowrap"><button class="dlbtn ${s.overdue ? "late" : s.week ? "soon" : ""}" data-dl="${pi}:${ii}">${esc(deadlineText(it, P) || "Set")}</button><div class="small muted">${esc(relText(it.dl))}</div></td>
+        <td><select class="cell st-${it.status.toLowerCase().replace(/\s+/g, "")}" data-pk="status">${[...new Set([...PSTATUS, it.status])].map(o => `<option ${it.status === o ? "selected" : ""}>${esc(o)}</option>`).join("")}</select></td>
+        <td><textarea class="cell" data-pk="comments" rows="${Math.max(1, Math.ceil(it.comments.length / 55))}" placeholder="Comments">${esc(it.comments)}</textarea></td>
+        <td><button class="ghost small" data-del="${pi}:${ii}" title="Delete this task">✕</button></td></tr>`;
+    });
+    flush();
+    if (!any && (PR.f !== "all" || q)) return;
+    h += `<div class="card" style="margin-bottom:12px;padding:0;overflow:hidden"><div class="phase">${esc(ph.name)}<button class="ghost small" data-addt="${pi}:end" style="float:right">+ Add task</button></div>
+      <table class="ptable"><thead><tr><th style="width:34%">Task</th><th style="width:13%">Lead person / team</th><th style="width:11%">Deadline</th><th style="width:11%">Status</th><th>Comments</th><th style="width:36px"></th></tr></thead><tbody>${body}</tbody></table></div>`;
+  });
+  if (P.footnote) h += `<p class="small muted">${esc(P.footnote)}</p>`;
+  h += `<datalist id="prLeads">${leads.map(l => `<option value="${esc(l)}">`).join("")}${who() && !leads.includes(who()) ? `<option value="${esc(who())}">` : ""}</datalist>`;
+  $("#page").innerHTML = h;
+  const find = k => { const [pi, ii] = k.split(":").map(Number); return P.phases[pi].items[ii]; };
+  document.querySelectorAll("[data-pf]").forEach(el => el.onclick = () => { PR.f = el.dataset.pf; pageProtocol(); });
+  $("#prQ").oninput = e => { PR.q = e.target.value; clearTimeout(PR.t); PR.t = setTimeout(() => { pageProtocol(); const i = $("#prQ"); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 300); };
+  $("#prDate").onchange = e => { const v = e.target.value; if (!needName()) return; P.date = v ? new Date(v + "T00:00:00Z") : null; markProto(`Protocol event date set to ${v || "blank"}`); pageProtocol(); };
+  document.querySelectorAll("[data-gi]").forEach(el => el.onchange = () => { P.glance[+el.dataset.gi].value = el.value.trim(); markProto(); });
+  document.querySelectorAll("[data-gt]").forEach(el => el.onchange = () => { P[el.dataset.gt] = el.value.trim(); markProto(); });
+  document.querySelectorAll(".ptable [data-pk]").forEach(el => el.onchange = () => {
+    const it = find(el.closest("tr").dataset.p), k = el.dataset.pk, v = el.tagName === "TEXTAREA" ? el.value.trim() : clean(el.value);
+    if (it[k] === v) return; it[k] = v; markProto(k === "status" ? `Protocol: "${it.task.slice(0, 60)}" → ${v}` : null);
+    if (k === "status") pageProtocol(); else toast("Saved");
+  });
+  document.querySelectorAll("[data-dl]").forEach(b => b.onclick = () => editDeadline(find(b.dataset.dl)));
+  document.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => { const [pi, ii] = b.dataset.del.split(":").map(Number); const it = P.phases[pi].items[ii];
+    if (await confirmModal("Delete this task?", `<p>${esc(it.task)}</p>`, "Delete")) { P.phases[pi].items.splice(ii, 1); markProto(`Protocol task deleted: ${it.task.slice(0, 60)}`); pageProtocol(); } });
+  document.querySelectorAll("[data-addt]").forEach(b => b.onclick = () => { const [pi, pos] = b.dataset.addt.split(":"); const items = P.phases[+pi].items;
+    let at = items.length; if (pos !== "end") { at = items.findIndex((x, i) => i > +pos && x.type === "group"); if (at < 0) at = items.length; }
+    const n = +pi === 1 ? 0 : +pi === 2 ? 7 : -14;
+    items.splice(at, 0, { type: "task", task: "New task", lead: "", dl: { kind: "off", n }, status: "Not Started", comments: "" });
+    PR.f = "all"; PR.q = ""; markProto(); pageProtocol(); const el = document.querySelector(`[data-p="${pi}:${at}"] textarea`); if (el) { el.focus(); el.select(); } });
+}
+function editDeadline(it){
+  const dl = it.dl || { kind: "off", n: -7 }, P = S.protocol;
+  const n = dl.kind === "off" || dl.kind === "fmt" ? Math.abs(dl.n) : 7, dir = (dl.n || 0) > 0 ? "after" : (dl.n === 0 ? "on" : "before");
+  showModal("When is this due?", `<p class="small muted">${esc(it.task)}</p>
+    <label class="opt"><input type="radio" name="dk" value="off" ${dl.kind === "off" || dl.kind === "fmt" ? "checked" : ""}><span><b>Counted from the event date</b> (moves if the date changes)<span style="display:flex;gap:6px;margin-top:6px;align-items:center"><input type="text" id="dN" value="${n}" style="width:70px"> days <select id="dD"><option ${dir === "before" ? "selected" : ""}>before</option><option ${dir === "on" ? "selected" : ""}>on</option><option ${dir === "after" ? "selected" : ""}>after</option></select> the event</span></span></label>
+    <label class="opt"><input type="radio" name="dk" value="date" ${dl.kind === "date" ? "checked" : ""}><span><b>A fixed date</b><input type="date" id="dDt" value="${isoDate(dl.kind === "date" ? dl.d : deadlineOf(it, P))}" style="margin-top:6px"></span></label>
+    <label class="opt"><input type="radio" name="dk" value="text" ${dl.kind === "text" ? "checked" : ""}><span><b>Words</b> (e.g. "Weekly", "January 2027")<input type="text" id="dTx" value="${esc(dl.kind === "text" ? dl.t : "")}" style="margin-top:6px;width:100%"></span></label>`,
+    [["Cancel", null], ["Save", () => {
+      const k = (document.querySelector('input[name="dk"]:checked') || {}).value;
+      if (k === "off") { const v = Math.abs(parseInt($("#dN").value, 10) || 0), d = $("#dD").value; const nn = d === "on" ? 0 : d === "before" ? -v : v;
+        it.dl = dl.kind === "fmt" ? { ...dl, n: nn } : { kind: "off", n: nn }; }
+      else if (k === "date") { const v = $("#dDt").value; if (v) it.dl = { kind: "date", d: new Date(v + "T00:00:00Z") }; }
+      else if (k === "text") it.dl = { kind: "text", t: clean($("#dTx").value) };
+      markProto(); pageProtocol();
+    }, true]]);
+}
+
 </script>
 <script>
 "use strict";
@@ -1018,11 +1401,12 @@ const ICONS = {
   addp:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M19 8v6M16 11h6"/>',
   rsvp:'<path d="M4 12l5 5L20 6"/>', docs:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M13 10h5M13 14h4"/>',
   follow:'<path d="M4 4h16v12H8l-4 4z"/>', report:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  proto:'<path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><rect x="5" y="5" width="14" height="16" rx="2"/><path d="M9 11l1.5 1.5L13 10M9 16h6"/>',
   log:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', event:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'
 };
 const ico = k => `<svg class="ico" viewBox="0 0 24 24">${ICONS[k]}</svg>`;
 const EVENT_PAGES = [
-  ["overview","Overview","over"],["guests","Guest list","guests"],["send","Approve & send","send"],["letter","Letter","letter"],["add","Add guests","addp"],
+  ["overview","Overview","over"],["protocol","Protocol","proto"],["guests","Guest list","guests"],["send","Approve & send","send"],["letter","Letter","letter"],["add","Add guests","addp"],
   ["rsvp","RSVP","rsvp",1],["eventdocs","Event-day documents","docs",1],["followup","Follow-up","follow",1],["reports","Reports & posts","report",1],
   ["activity","Activity","log"],["details","Event details","event"]
 ];
@@ -1135,6 +1519,7 @@ const HELPTXT = {
   contacts: ["Search the AWEP master contact list.", "Upload it once, type words such as <i>bank, finance, embassy</i>, untick anyone you don't want, then <b>Download as Excel</b> (the contact list for an event) or <b>Add to an event</b>."],
   newevent: ["Create an event in a few minutes.", "Answer the questions, upload your drafted letter (Word) or type it, and the Hub creates the event's file. Keep that file in the team's shared folder."],
   overview: ["Where this event stands.", "Work down the steps: each button takes you to the right page."],
+  protocol: ["The event's task plan: who does what, by when.", "Upload the protocol from Excel, or start from the standard AWEP protocol. Change the <b>event date</b> at the top and every deadline moves with it. Type in any box to edit; pick a status; <b>Download as Excel</b> gives the protocol in the usual format to share."],
   guests: ["Everyone invited to this event.", "Click any box to correct a name, email or language: it saves by itself. Click <b>Open</b> on a row to see that person's letter and to approve and send it."],
   send: ["Approve and send, one person at a time.", "Correct anything on the left; the letter on the right updates as you type. <b>Approve & open email</b> confirms the letter is right and opens the email for you to send. Then click <b>I've sent it</b>."],
   letter: ["The letter and covering email for this event.", "Upload the letter you drafted in Word, or edit the text here. Someone who speaks the language must click <b>Approve</b> before any letter in that language can go."],
@@ -1152,7 +1537,7 @@ function evCrumb(){ return `<a data-go="overview">${esc(S.brief["Event name"] ||
 function draw(){
   renderNav(); renderMe(); renderSave();
   if (SOON[route]) return pageSoon(route);
-  ({ home:pageHome, contacts:pageContacts, newevent:pageNewEvent, overview:pageOverview, guests:pageGuests, send:pageSend, letter:pageLetter, add:pageAddWrap, activity:pageActivity, details:pageDetails }[route] || pageHome)();
+  ({ home:pageHome, contacts:pageContacts, newevent:pageNewEvent, overview:pageOverview, protocol:pageProtocol, guests:pageGuests, send:pageSend, letter:pageLetter, add:pageAddWrap, activity:pageActivity, details:pageDetails }[route] || pageHome)();
 }
 
 /* ---------- open / save ---------- */
@@ -1168,7 +1553,9 @@ async function openWorkbook(){
 $("#file").addEventListener("change", e => { if (e.target.files[0]) loadFile(e.target.files[0], null); e.target.value = ""; });
 $("#btnSave").onclick = () => saveNow(true);
 window.addEventListener("beforeunload", e => { if (S && S.dirty) { e.preventDefault(); e.returnValue = ""; } });
-function onLoaded(){ lastZip = null; gFilter = "all"; gSearch = ""; PS.id = null; rememberEvent(); go("overview"); toast(`Opened <b>${esc(S.brief["Event name"] || S.fileName)}</b>`); if (pending.length) autoSave(); }
+function onLoaded(){ S.protocol = readProtocol(S.wb.Sheets[PROTO_SHEET], PROTO_SHEET); S.protoDirty = false;
+  if (window.__awepNewProto && !S.protocol) { S.protocol = standardProtocol(); S.protoDirty = true; S.dirty = true; } window.__awepNewProto = false;
+  lastZip = null; gFilter = "all"; gSearch = ""; PS.id = null; rememberEvent(); go("overview"); toast(`Opened <b>${esc(S.brief["Event name"] || S.fileName)}</b>`); if (pending.length) autoSave(); }
 function renderSave(){
   const el = $("#saveState"); el.className = "";
   $("#btnSave").classList.toggle("hide", !S || (S.handle && !S.saveError && !S.dirty));
@@ -1236,7 +1623,9 @@ function pageOverview(){
   const noTpl = [...langs].filter(l => !S.templates[l] || !S.templates[l].body);
   const letterOk = !unTpl.length && !noTpl.length && langs.size > 0;
   const guests = c.all - c.excluded, todo = c.blocked + c.approval + c.ready + c.drafted;
+  const pc = S.protocol ? protoCounts(S.protocol) : null;
   const steps = [
+    ["Protocol", pc ? `${pc.done} of ${pc.all} tasks done${pc.overdue ? ` · ${pc.overdue} overdue` : ""}${pc.week ? ` · ${pc.week} due this week` : ""}.` : "No protocol yet: upload one or start from the standard one.", "protocol", pc ? "Open protocol" : "Add protocol", !!pc && !pc.overdue],
     ["Letter", letterOk ? "Letter written and approved." : noTpl.length ? `Upload or write the ${noTpl.join(", ")} letter.` : unTpl.length ? `The ${unTpl.map(t=>t.lang).join(", ")} letter needs approving.` : "Upload or write the letter.", "letter", letterOk ? "View" : "Open letter", letterOk],
     ["Guests", guests ? `${guests} people on the list.` : "No guests yet.", guests ? "guests" : "add", guests ? "View list" : "Add guests", guests > 0],
     ["Approve & send", todo ? `${todo} to do: ${c.blocked} need fixing, ${c.approval} to approve, ${c.ready} to send, ${c.drafted} to mark sent.` : guests ? "Nobody waiting." : "Add guests first.", "send", "Start", guests > 0 && !todo],
@@ -1786,6 +2175,8 @@ pageNewEvent = function(){
   head(S ? `<a data-go="home">Home</a> ›` : `<a data-go="home">Home</a> ›`, "New event", "Answer these, upload or type the letter, and the Hub creates the event's file.");
   const bodyLabel = document.querySelector('#ne [data-f="body"]').closest("label");
   bodyLabel.insertAdjacentHTML("beforebegin", `<div class="full big-drop" style="grid-column:1/-1;padding:14px"><b>Already drafted the letter in Word?</b> <label class="fchip on" style="cursor:pointer;margin-left:8px">Upload it<input type="file" id="neUp" accept=".docx" class="hide"></label><div class="small muted" style="margin-top:4px">Fills in the date, heading, text and signatory below for you to check.</div></div>`);
+  document.querySelector("#neGo").insertAdjacentHTML("beforebegin", `<label class="small" style="display:flex;gap:6px;align-items:center;margin-right:auto"><input type="checkbox" id="neProto" checked> Add the standard AWEP event protocol (tasks and deadlines)</label>`);
+  document.querySelector("#neGo").addEventListener("click", () => { window.__awepNewProto = $("#neProto").checked; }, true);
   $("#neUp").onchange = async e => { const f = e.target.files[0]; if (!f) return;
     try { const u = parseLetter(await readDocx(f)); const set = (k, v) => { if (v) document.querySelector(`#ne [data-f="${k}"]`).value = v; };
       set("ldate", u.date); set("heading", u.heading); set("body", u.body); set("sig", u.sig); const l = guessLang(u); document.querySelector('#ne [data-f="lang"]').value = l;
@@ -1820,6 +2211,13 @@ function showModal(title, body, buttons){
 }
 function closeModal(){ $("#modalBack").classList.remove("show"); }
 function confirmModal(title, body, yes){ return new Promise(res => showModal(title, body, [["Cancel", () => res(false)], [yes, () => res(true), true]])); }
+
+/* ---------- protocol is written into the event file on every save ---------- */
+const _coreWorkbookBlob = workbookBlob;
+workbookBlob = async function(){
+  if (S && S.protoDirty && S.protocol) { await writeProtocolToZip(S.zip, S.protocol, PROTO_SHEET); S.paths = await sheetPaths(S.zip); S.protoDirty = false; }
+  return _coreWorkbookBlob();
+};
 
 /* ---------- start ---------- */
 (async () => {
